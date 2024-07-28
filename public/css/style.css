@@ -1,0 +1,151 @@
+/* Reset */
+*,
+::before,
+::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+img {
+  display: block;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+}
+
+/* Theme */
+:root {
+  /* Colors */
+  --black-dark: #222831;
+  --black-light: #393e46;
+  --blue-primary: #00fff5;
+  --blue-secondary: #00adb5;
+  /* Fonts */
+  --ff-main: "Lato", sans-serif;
+  --ff-title: "Karla", sans-serif;
+  --fz-14: 1.4rem;
+  --fz-16: 1.6rem;
+  --fz-18: 1.8rem;
+  --fz-20: 2rem;
+  --fz-24: 2.4rem;
+  --fz-32: 3.2rem;
+  --fz-40: 4rem;
+}
+
+body {
+  background-color: var(--black-dark);
+  color: #fff;
+  font-family: var(--ff-main);
+  font-size: var(--fz-16);
+}
+
+main {
+  /* A enlever plus tard, c'est juste pour avoir le footer en bas 
+  sur les pages vides pendant la phase de dev */
+  min-height: calc(100vh - 120px);
+}
+
+/* General */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--ff-title);
+}
+
+/* Header */
+header {
+  background: var(--blue-primary);
+  color: var(--black-dark);
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  min-height: 60px;
+  box-shadow: 0 5px 7px rgba(0, 0, 0, 0.6);
+}
+
+.header__logo {
+  font-size: var(--fz-24);
+  text-decoration: none;
+  font-weight: 900;
+  font-family: var(--ff-title);
+  margin-right: auto;
+  transition: opacity 0.2s ease-out;
+}
+
+.header__logo:hover {
+  opacity: 0.85;
+}
+
+.header-search {
+  margin-right: 32px;
+}
+
+.header-search__form {
+  position: relative;
+  min-width: 320px;
+}
+
+.header-search__form input {
+  width: 100%;
+  font-size: var(--fz-16);
+  color: var(--black-dark);
+  padding: 4px 30px 4px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--blue-secondary);
+  /* Il faudra s'occuper l'outline */
+}
+
+.header-search__form button {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 100%;
+  background: none;
+  border: none;
+  color: var(--black-dark);
+  padding-inline: 4px;
+  border-radius: 4px;
+  font-size: var(--fz-16);
+  transition: opacity 0.2s ease-out;
+}
+
+.header-search__form button:hover {
+  opacity: 0.85;
+}
+
+.main-navigation {
+  display: flex;
+  font-size: var(--fz-18);
+  gap: 16px;
+  font-family: var(--ff-title);
+}
+
+.main-navigation__link {
+  text-decoration: none;
+  /* Ajouter une classe active */
+}
+
+/* Footer */
+footer {
+  background: var(--blue-primary);
+  color: var(--black-dark);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 16px;
+  min-height: 60px;
+}
