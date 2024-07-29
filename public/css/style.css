@@ -160,7 +160,10 @@ header {
 
 .main-navigation__link {
   text-decoration: none;
-  /* Ajouter une classe active */
+}
+
+.main-navigation__link--active {
+  text-decoration: underline;
 }
 
 /* Footer */

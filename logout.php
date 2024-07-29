@@ -1,19 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+require_once __DIR__ . "/database/db_access.php";
+$sessionAccess = require_once __DIR__ . "/database/models/db_sessions.php";
 
-<head> <!-- ᓚᘏᗢ -->
-  <?php require_once "./includes/head.php"; ?>
-  <title>Forum - Connexion</title>
-</head>
+$user = $sessionAccess->isLoggedIn();
 
-<body>
-  <?php require_once "./includes/header.php"; ?>
+if ($user) {
+  $sessionAccess->deleteSession();
+}
 
-  <main>Deconnexion</main>
-
-  <?php require_once "./includes/footer.php"; ?>
-  <script src="./public/js/app.js"></script>
-</body>
-
-</html>
-<!-- (👉ﾟヮﾟ)👉 -->
+header("Location: /");

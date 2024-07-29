@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . "/database/db_access.php";
 $userAccess = require_once __DIR__ . "/database/models/db_users.php";
+$sessionAccess = require_once __DIR__ . "/database/models/db_sessions.php";
 
 // Messages d'erreur
 const ERROR_REQUIRED = "Ce champs est requis";
