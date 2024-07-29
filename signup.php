@@ -11,15 +11,15 @@ const ERROR_EMAIL_ALREADY_EXISTS = "Il y a déjà un compte avec cette adresse m
 const ERROR_PASSWORD_TOO_SHORT = "Le mot de passe doit faire 8 caractères minimum";
 const ERROR_PASSWORD_WRONG_CONFIRMATION = "Le mot de passe de confirmation ne correspond pas";
 
+$errors = [
+  'username' => '',
+  'email' => '',
+  'password' => '',
+  'confirmation' => ''
+];
+
 // Gestion du POST du formulaire
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-
-  $errors = [
-    'username' => '',
-    'email' => '',
-    'password' => '',
-    'confirmation' => ''
-  ];
 
   $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL) ?? "";
   $username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "";
@@ -88,11 +88,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <div class="input-group">
           <label for="email">Email</label>
           <input type="email" name="email" id="email">
+          <?php if ($errors["email"]) : ?>
+            <p class="form-error"><?= $errors["email"]; ?></p>
+          <?php endif; ?>
         </div>
 
         <div class="input-group">
           <label for="username">Nom d'utilisateur</label>
           <input type="text" name="username" id="username">
+          <?php if ($errors["username"]) : ?>
+            <p class="form-error"><?= $errors["username"]; ?></p>
+          <?php endif; ?>
         </div>
 
         <div class="input-group">
@@ -103,11 +109,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
               <i class="fa-regular fa-eye" aria-hidden="true"></i>
             </button>
           </div>
+          <?php if ($errors["password"]) : ?>
+            <p class="form-error"><?= $errors["password"]; ?></p>
+          <?php endif; ?>
         </div>
 
         <div class="input-group">
           <label for="confirmation">Confirmer le mot de passe</label>
           <input type="password" name="confirmation" id="confirmation">
+          <?php if ($errors["confirmation"]) : ?>
+            <p class="form-error"><?= $errors["confirmation"]; ?></p>
+          <?php endif; ?>
         </div>
 
         <button type="submit" class="btn btn--primary">Valider</button>

@@ -30,6 +30,7 @@ a {
   --black-light: #393e46;
   --blue-primary: #00fff5;
   --blue-secondary: #00adb5;
+  --error: #e84118;
   /* Fonts */
   --ff-main: "Lato", sans-serif;
   --ff-title: "Karla", sans-serif;
@@ -63,6 +64,23 @@ h4,
 h5,
 h6 {
   font-family: var(--ff-title);
+}
+
+input:not([type="radio"]),
+textarea {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  font-size: var(--fz-16);
+  /* Gérer l'outline */
+}
+
+textarea {
+  resize: vertical;
+}
+
+label {
+  margin-bottom: 8px;
 }
 
 /* Utils */
