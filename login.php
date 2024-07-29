@@ -59,10 +59,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body>
   <?php require_once "./includes/header.php"; ?>
 
-  <main>
+  <main class="center">
 
-    <section class="login-section section-800">
-      <h1>Connexion</h1>
+    <section class="login-section section-600 black-card">
+      <h1 class="main-title">Connexion</h1>
 
       <form action="/login.php" method="POST">
 
@@ -82,13 +82,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
               <i class="fa-regular fa-eye" aria-hidden="true"></i>
             </button>
           </div>
+          <a href="#" class="form-link">Mot de passe oublié</a>
           <?php if ($errors["password"]) : ?>
             <p class="form-error"><?= $errors["password"]; ?></p>
           <?php endif; ?>
         </div>
 
-        <button type="submit" class="btn btn--primary">Valider</button>
-        <p class="form-link">Pas encore de compte ?<a href="./signup.php">Inscription</a>.</p>
+        <button type="submit" class="btn btn--primary">Connexion</button>
+        <p class="form-link">Pas encore de compte ? <a href="./signup.php">Inscription</a>.</p>
       </form>
     </section>
 

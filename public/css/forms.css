@@ -1,6 +1,7 @@
 .input-group {
   display: flex;
   flex-direction: column;
+  margin-bottom: 16px;
 }
 
 .form-error {
@@ -25,4 +26,29 @@
 
 input[type="password"] {
   padding-right: 40px;
+}
+
+.signup-section .btn,
+.login-section .btn {
+  width: 66%;
+  margin-inline: auto;
+  margin-bottom: 16px;
+  font-size: var(--fz-18);
+  font-weight: 600;
+}
+
+.form-link {
+  font-size: var(--fz-14);
+  text-align: right;
+  margin-left: auto;
+}
+
+input.input-big {
+  font-size: var(--fz-20);
+  font-family: var(--ff-title);
+  font-weight: 600;
+}
+
+.content-input {
+  min-height: 200px;
 }

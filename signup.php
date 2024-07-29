@@ -79,10 +79,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body>
   <?php require_once "./includes/header.php"; ?>
 
-  <main>
+  <main class="center">
 
-    <section class="signup-section section-800">
-      <h1>Inscription</h1>
+    <section class="signup-section section-600 black-card">
+      <h1 class="main-title">Inscription</h1>
 
       <form action="/signup.php" method="POST">
 
@@ -123,7 +123,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           <?php endif; ?>
         </div>
 
-        <button type="submit" class="btn btn--primary">Valider</button>
+        <button type="submit" class="btn btn--primary">Inscription</button>
         <p class="form-link">Déjà un compte ? <a href="./login.php">Connexion</a>.</p>
       </form>
     </section>

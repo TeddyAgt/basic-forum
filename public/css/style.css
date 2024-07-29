@@ -45,6 +45,14 @@ a {
 
 body {
   background-color: var(--black-dark);
+  background-image: repeating-linear-gradient(
+      45deg,
+      rgba(97, 97, 97, 0.1) 0px,
+      rgba(97, 97, 97, 0.1) 2px,
+      transparent 2px,
+      transparent 4px
+    ),
+    linear-gradient(90deg, rgb(34, 40, 49), rgb(34, 40, 49));
   color: #fff;
   font-family: var(--ff-main);
   font-size: var(--fz-16);
@@ -54,9 +62,57 @@ main {
   /* A enlever plus tard, c'est juste pour avoir le footer en bas 
   sur les pages vides pendant la phase de dev */
   min-height: calc(100vh - 120px);
+  padding-inline: 16px;
+}
+
+.main-title {
+  margin-bottom: 32px;
+  font-size: var(--fz-40);
+  text-align: center;
+}
+
+.black-card {
+  background: var(--black-light);
+  border-radius: 4px;
+  box-shadow: 0 5px 7px rgba(0, 0, 0, 0.6);
+  padding: 16px;
+}
+
+.btn {
+  display: block;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-family: var(--ff-title);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.2s ease-out;
+}
+
+.btn--inline {
+  display: inline-block;
+}
+
+.btn--primary {
+  background: var(--blue-primary);
+  color: var(--black-dark);
+}
+
+.btn--primary:hover {
+  background: var(--blue-secondary);
+}
+
+.separator--horizontal {
+  height: 1px;
+  width: 100%;
+  background: var(--blue-primary);
+  margin-block: 16px;
 }
 
 /* General */
+section {
+  margin-bottom: 32px;
+}
+
 h1,
 h2,
 h3,
@@ -67,11 +123,16 @@ h6 {
 }
 
 input:not([type="radio"]),
-textarea {
+textarea,
+select,
+option {
   width: 100%;
   padding: 8px;
   border-radius: 4px;
+  font-family: var(--ff-main);
   font-size: var(--fz-16);
+  border: none;
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.4);
   /* Gérer l'outline */
 }
 
@@ -84,9 +145,22 @@ label {
 }
 
 /* Utils */
-.section-800 {
-  max-width: 800px;
+.section-600 {
+  max-width: 600px;
+  width: 100%;
   margin-inline: auto;
+}
+
+.section-1200 {
+  max-width: 1200px;
+  width: 100%;
+  margin-inline: auto;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Header */
@@ -97,6 +171,7 @@ header {
   align-items: center;
   padding: 8px 16px;
   min-height: 60px;
+  margin-bottom: 32px;
   box-shadow: 0 5px 7px rgba(0, 0, 0, 0.6);
 }
 
@@ -126,7 +201,7 @@ header {
   width: 100%;
   font-size: var(--fz-16);
   color: var(--black-dark);
-  padding: 4px 30px 4px 8px;
+  padding: 8px 30px 8px 8px;
   border-radius: 4px;
   border: 1px solid var(--blue-secondary);
   /* Il faudra s'occuper l'outline */
