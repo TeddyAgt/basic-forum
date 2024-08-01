@@ -30,6 +30,7 @@ a {
   --black-light: #393e46;
   --blue-primary: #00fff5;
   --blue-secondary: #00adb5;
+  --light-grey: #c8d6e5;
   --error: #e84118;
   /* Fonts */
   --ff-main: "Lato", sans-serif;
@@ -161,6 +162,21 @@ label {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 16px;
 }
 
 /* Header */

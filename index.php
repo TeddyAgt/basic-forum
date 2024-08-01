@@ -2,9 +2,18 @@
 require_once __DIR__ . "/database/db_access.php";
 $userAccess = require_once __DIR__ . "/database/models/db_users.php";
 $sessionAccess = require_once __DIR__ . "/database/models/db_sessions.php";
-$subjectAccess = require_once __DIR__ . "/database/models/db_subjects.php";
+$discussionAccess = require_once __DIR__ . "/database/models/db_discussions.php";
 
-$categoriesList = $subjectAccess->getAllCategories() ?? [];
+$categoriesList = $discussionAccess->getAllCategories() ?? [];
+
+$latests = [
+  "discussions" => $discussionAccess->getLast10Discussions(),
+  "messages" => $discussionAccess->getLast10Messages()
+];
+
+// echo "<pre>";
+// var_dump($latests);
+// echo "</pre>";
 ?>
 
 <!DOCTYPE html>
@@ -23,7 +32,7 @@ $categoriesList = $subjectAccess->getAllCategories() ?? [];
 
     <section class="black-card index-header section-1200">
       <h1 class="main-title">Forum</h1>
-      <a href="./subject-form.php" class="btn btn--primary">Commencer un nouveau sujet</a>
+      <a href="./discussion-form.php" class="btn btn--primary">Commencer un nouveau sujet</a>
     </section>
 
     <!-- Catégories -->
@@ -35,8 +44,8 @@ $categoriesList = $subjectAccess->getAllCategories() ?? [];
 
         <?php foreach ($categoriesList as $i => $category) : ?>
 
-          <li class="categories-list__item <?= $i % 2 === 0 ? "categories-list__item--even" : "categories-list__item--odd" ?>">
-            <a href="" class="">
+          <li class="categories-list__item index-list__item">
+            <a href="">
               <i class="<?= $category["icon"] ?>" aria-hidden="true"></i>
               <?= $category["name"]; ?>
             </a>
@@ -49,18 +58,59 @@ $categoriesList = $subjectAccess->getAllCategories() ?? [];
 
     <!-- Récents -->
     <section class="latests-section black-card section-1200">
-      <button type="button" class="btn btn--inline see-latests-btn" data-latests="subjects">Derniers sujets</button>
+      <button type="button" class="btn btn--inline see-latests-btn" data-latests="discussions">Derniers sujets</button>
       <button type="button" class="btn btn--inline see-latests-btn" data-latests="messages">Derniers messages</button>
       <div class="separator--horizontal"></div>
 
-      <!-- Derniers sujets -->
-      <article class="latests-article latests-article--subjects active">
+      <!-- Dernières discussions -->
+      <article class="latests-article latests-article--discussions active">
         <h2 class="section-title">Derniers sujets</h2>
+
+        <ul class="latests-list">
+
+          <?php foreach ($latests["discussions"] as $discussion) : ?>
+
+            <li class="latests-list__item index-list__item">
+              <h3 class="latests-list__item-title">
+                <a href="/discussion.php?id=<?= $discussion["id"]; ?>"><i class="<?= $discussion["category_icon"]; ?>" aria-hidden="true"></i><?= $discussion["title"]; ?></a>
+              </h3>
+              <div class="">
+                <p>par <a href="#"><?= $discussion["username"]; ?></a></p>
+                <p>le <?= $discussion["creation_date"]; ?></p>
+                <p><?= $discussion["nb_responses"], $discussion["nb_responses"] > 1 ? " messages" : " message"; ?></p>
+              </div>
+              <div class="">
+                <p>Dernière réponse: <?= $discussion["latest_response"]; ?></p>
+              </div>
+            </li>
+
+          <?php endforeach; ?>
+        </ul>
+
       </article>
 
       <!-- Derniers messages -->
       <article class="latests-article latests-article--messages">
         <h2 class="section-title">Derniers messages</h2>
+
+        <ul class="latests-list">
+
+          <?php foreach ($latests["messages"] as $message) : ?>
+
+            <li class="latests-list__item index-list__item">
+              <h3 class="latests-list__item-title">
+                <a href="/discussion.php?id=<?= $message["discussion_id"]; ?>"><?= $message["discussion_title"]; ?></a>
+              </h3>
+              <div class="">
+                <p>par <a href="#"><?= $message["username"]; ?></a></p>
+                <p>le <?= $message["creation_date"]; ?></p>
+              </div>
+            </li>
+
+          <?php endforeach; ?>
+
+        </ul>
+
       </article>
 
     </section>

@@ -2,14 +2,10 @@
 require_once __DIR__ . "/database/db_access.php";
 $userAccess = require_once __DIR__ . "/database/models/db_users.php";
 $sessionAccess = require_once __DIR__ . "/database/models/db_sessions.php";
-$subjectAccess = require_once __DIR__ . "/database/models/db_subjects.php";
-$categoriesList = $subjectAccess->getAllCategories() ?? [];
+$discussionAccess = require_once __DIR__ . "/database/models/db_discussions.php";
+$categoriesList = $discussionAccess->getAllCategories() ?? [];
 
 $user = $sessionAccess->isLoggedIn();
-
-if (!$user) {
-  // pop up avec choix connexion ou inscription
-}
 
 // Messages d'erreur
 const ERROR_REQUIRED = "Ce champs est requis";
@@ -22,19 +18,8 @@ $errors = [
   "content" => ""
 ];
 
-
 // Gestion du POST du formulaire
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-  // Sanitize des données reçues
-  // $_POST = filter_input_array(INPUT_POST, [
-  //   "category" => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
-  //   "title" => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
-  //   "content" => [
-  //     "filter" => FILTER_SANITIZE_SPECIAL_CHARS,
-  //     "flags" => FILTER_FLAG_NO_ENCODE_QUOTES
-  //   ]
-  // ]);
-
   $category = filter_input(INPUT_POST, "category", FILTER_SANITIZE_NUMBER_INT) ?? "";
   $title = filter_input(INPUT_POST, "title", FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "";
   $content = filter_input(INPUT_POST, "content", FILTER_SANITIZE_FULL_SPECIAL_CHARS, ["flags" => FILTER_FLAG_NO_ENCODE_QUOTES]) ?? "";
@@ -56,12 +41,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   }
 
   if (empty(array_filter($errors, fn ($e) => $e !== ""))) {
-    $subjectAccess->createOneSubject([
+    $discussionAccess->createOneDiscussion([
       "authorId" => $user["id"],
       "title" => $title,
       "categoryId" => $category,
       "text" => $content
     ]);
+
+    header("Location: /");
   }
 }
 
@@ -84,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <section class="black-card index-header section-1200">
       <h1 class="main-title">Écrire un nouveau sujet</h1>
 
-      <form action="/subject-form.php" method="POST">
+      <form action="/discussion-form.php" method="POST">
 
         <div class="input-group">
           <label for="category">Catégorie</label>
@@ -98,11 +85,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <div class="input-group">
           <label for="title">Titre</label>
           <input type="text" name="title" id="title" class="input-big">
+          <?php if ($errors["title"]) : ?>
+            <p class="form-error"><?= $errors["title"]; ?></p>
+          <?php endif; ?>
         </div>
 
         <div class="input-group">
           <label for="content">Message</label>
           <textarea name="content" id="content" class="content-input"></textarea>
+          <?php if ($errors["content"]) : ?>
+            <p class="form-error"><?= $errors["content"]; ?></p>
+          <?php endif; ?>
         </div>
 
         <button type="submit" class="btn btn--primary">Publier</button>
@@ -110,6 +103,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       </form>
     </section>
   </main>
+
+  <?php if (!$user) : ?>
+    <div class="overlay active">
+      <section class="redirect-popup black-card">
+        <h2 class="popup-title">Vous devez être connecté pour commencer une discussion</h2>
+
+        <div class="popup-control-group">
+          <a href="./login.php" class="btn btn--primary">Connexion</a>
+          <a href="./signup.php" class="btn btn--primary">Inscription</a>
+        </div>
+      </section>
+    </div>
+  <?php endif; ?>
 
   <?php require_once "./includes/footer.php"; ?>
   <script src="./public/js/app.js"></script>

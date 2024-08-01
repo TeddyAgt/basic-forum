@@ -52,3 +52,14 @@ input.input-big {
 .content-input {
   min-height: 200px;
 }
+
+.popup-title {
+  margin-bottom: 32px;
+}
+
+.popup-control-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}

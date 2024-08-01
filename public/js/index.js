@@ -8,7 +8,7 @@ seeLatestsBtns.forEach((btn) =>
 );
 
 function toggleLatests(e) {
-  if (e.target.dataset.latests === "subjects") {
+  if (e.target.dataset.latests === "discussions") {
     seeLatestsArticles[0].classList.add("active");
     seeLatestsArticles[1].classList.remove("active");
   } else {

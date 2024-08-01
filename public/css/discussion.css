@@ -1,0 +1,86 @@
+.discussion-section__message {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+}
+
+.discussion-section__message,
+.discussion-section__send-response-article {
+  margin-bottom: 16px;
+}
+
+.message__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-right: 16px;
+  border-right: 1px solid var(--blue-primary);
+}
+
+.head__profile-picture {
+  width: 48px;
+}
+
+.head__profile-picture img {
+  max-width: 100%;
+}
+
+.message__body {
+  position: relative;
+  padding-left: 16px;
+}
+
+.body__responds-to-message {
+  background: var(--black-dark);
+  border: 1px solid var(--light-grey);
+  border-radius: 4px;
+  width: fit-content;
+  max-width: 500px;
+  padding: 8px;
+  margin-bottom: 16px;
+}
+
+.responds-to-message__user {
+  margin-bottom: 8px;
+}
+
+.body__message-text:not(.body__message-text--response) {
+  white-space: pre-wrap;
+  margin-bottom: auto;
+}
+
+.body__reply-link {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #00fff5;
+  transition: opacity 0.2s ease-out;
+}
+
+.body__reply-link:hover {
+  opacity: 0.68;
+  transition: opacity 0.2s ease-out;
+}
+
+.body__like-container {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  gap: 8px;
+}
+
+.like-btn {
+  color: #00fff5;
+  background: none;
+  border: none;
+  transition: opacity 0.2s ease-out;
+}
+
+.like-btn i {
+  pointer-events: none;
+}
+
+.like-btn:hover {
+  opacity: 0.68;
+  transition: opacity 0.2s ease-out;
+}

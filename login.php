@@ -14,7 +14,7 @@ $errors = [
   "password" => ""
 ];
 
-// Gestion du POST fu formulaire
+// Gestion du POST du formulaire
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
   $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL) ?? "";
   $password = $_POST["password"] ?? "";
