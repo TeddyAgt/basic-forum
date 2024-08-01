@@ -5,6 +5,8 @@ class Discussion
   public int $id;
   public string $title;
   public int $authorId;
+  public int $nbrOfMessages;
+  public int $pages;
   public array $messages;
 
   public function __construct(array $discussion)
@@ -12,7 +14,9 @@ class Discussion
     $this->id = $discussion["id"];
     $this->title = $discussion["title"];
     $this->authorId = $discussion["author_id"];
+    $this->nbrOfMessages = $discussion["nbr_of_messages"];
     $this->messages = [];
+    $this->pages = ceil($this->nbrOfMessages / 10);
   }
 
   public function addMessage(Message $message): void

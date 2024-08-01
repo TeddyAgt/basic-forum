@@ -20,7 +20,8 @@ $userAccess = require_once __DIR__ . "/database/models/db_users.php";
 $sessionAccess = require_once __DIR__ . "/database/models/db_sessions.php";
 $discussionAccess = require_once __DIR__ . "/database/models/db_discussions.php";
 
-$latests = $discussionAccess->getLast10Discussions();
+$latests = $discussionAccess->getDiscussionPageById(4, 1);
+
 
 echo "<pre>";
 var_dump($latests);

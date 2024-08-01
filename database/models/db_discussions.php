@@ -10,13 +10,14 @@ class DiscussionAccess
 
   // Discussions PDO Statements
   private PDOStatement $statementCreateOneDiscussion;
-  private PDOStatement $statementGetLast10Discussions;
+  private PDOStatement $statementGetLastNDiscussions;
   private PDOStatement $statementGetDiscussionById;
 
   // Messages PDO Statements
   private PDOStatement $statementCreateOneMessage;
-  private PDOStatement $statementGetLast10Messages;
+  private PDOStatement $statementGetLastNMessages;
   private PDOStatement $statementGetMessagesByDiscussionId;
+  private PDOStatement $statementGetMessagesPageByDiscussionId;
 
   public function __construct(private PDO $pdo)
   {
@@ -34,12 +35,16 @@ class DiscussionAccess
     ");
 
     $this->statementGetDiscussionById = $pdo->prepare("
-      SELECT *
+      SELECT *, (
+        SELECT COUNT(messages.id)
+        FROM messages
+        WHERE discussion_id = :discussionId
+      ) AS nbr_of_messages
       FROM discussions
       WHERE id = :discussionId
     ");
 
-    $this->statementGetLast10Discussions = $pdo->prepare("
+    $this->statementGetLastNDiscussions = $pdo->prepare("
       SELECT 
         discussions.*,
         categories.name AS category_name,
@@ -62,7 +67,7 @@ class DiscussionAccess
         INNER JOIN users ON discussions.author_id = users.id
         GROUP BY discussions.id
         ORDER BY creation_date DESC
-        LIMIT 10;
+        LIMIT :N;
     ");
 
     // Messages Statements Preparation
@@ -83,7 +88,21 @@ class DiscussionAccess
       ORDER BY id ASC
     ");
 
-    $this->statementGetLast10Messages = $pdo->prepare("
+    $this->statementGetMessagesPageByDiscussionId = $pdo->prepare("
+      SELECT messages.*, username, profile_picture, (
+        SELECT COUNT(user_id)
+        FROM likes
+        WHERE message_id = messages.id
+      ) AS likes
+      FROM messages
+      INNER JOIN users ON messages.author_id = users.id
+      WHERE discussion_id = :discussionId
+      ORDER BY id ASC
+      LIMIT :limit
+      OFFSET :page
+    ");
+
+    $this->statementGetLastNMessages = $pdo->prepare("
       SELECT 
         m1.*,
         discussions.title AS discussion_title,
@@ -101,7 +120,7 @@ class DiscussionAccess
         INNER JOIN users ON m1.author_id = users.id
         GROUP BY m1.id
         ORDER BY creation_date DESC
-        LIMIT 10;
+        LIMIT :N;
     ");
   }
 
@@ -146,10 +165,28 @@ class DiscussionAccess
     return $discussion ?? false;
   }
 
-  public function getLast10Discussions(): array
+  public function getDiscussionPageById(int $discussionId, int $page = 0, int $limit = 10): Discussion | bool
   {
-    $this->statementGetLast10Discussions->execute();
-    return $this->statementGetLast10Discussions->fetchAll() ?? [];
+    $this->statementGetDiscussionById->bindValue(":discussionId", $discussionId);
+    if ($this->statementGetDiscussionById->execute()) {
+      $discussion = new Discussion($this->statementGetDiscussionById->fetch());
+
+      $messageList = $this->getMessagesPageByDiscussionId($discussionId, $page, $limit);
+      if ($messageList) {
+        foreach ($messageList as $m) {
+          $discussion->addMessage(new Message($m));
+        }
+      }
+    }
+
+    return $discussion ?? false;
+  }
+
+  public function getLastNDiscussions(int $n = 10): array
+  {
+    $this->statementGetLastNDiscussions->bindValue(":N", $n, PDO::PARAM_INT);
+    $this->statementGetLastNDiscussions->execute();
+    return $this->statementGetLastNDiscussions->fetchAll() ?? [];
   }
 
   // Messages CRUD Methods
@@ -169,10 +206,20 @@ class DiscussionAccess
     return $this->statementGetMessagesByDiscussionId->fetchAll();
   }
 
-  public function getLast10Messages(): array
+  public function getMessagesPageByDiscussionId(int $discussionId, int $page, int $limit): array | bool
   {
-    $this->statementGetLast10Messages->execute();
-    return $this->statementGetLast10Messages->fetchAll() ?? [];
+    $this->statementGetMessagesPageByDiscussionId->bindValue(":discussionId", $discussionId);
+    $this->statementGetMessagesPageByDiscussionId->bindValue(":page", ($page * $limit) - $limit, PDO::PARAM_INT);
+    $this->statementGetMessagesPageByDiscussionId->bindValue(":limit", $limit, PDO::PARAM_INT);
+    $this->statementGetMessagesPageByDiscussionId->execute();
+    return $this->statementGetMessagesPageByDiscussionId->fetchAll();
+  }
+
+  public function getLastNMessages(int $n = 10): array
+  {
+    $this->statementGetLastNMessages->bindValue(":N", $n, PDO::PARAM_INT);
+    $this->statementGetLastNMessages->execute();
+    return $this->statementGetLastNMessages->fetchAll() ?? [];
   }
 }
 

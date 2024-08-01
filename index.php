@@ -7,8 +7,8 @@ $discussionAccess = require_once __DIR__ . "/database/models/db_discussions.php"
 $categoriesList = $discussionAccess->getAllCategories() ?? [];
 
 $latests = [
-  "discussions" => $discussionAccess->getLast10Discussions(),
-  "messages" => $discussionAccess->getLast10Messages()
+  "discussions" => $discussionAccess->getLastNDiscussions(),
+  "messages" => $discussionAccess->getLastNMessages()
 ];
 
 // echo "<pre>";
@@ -72,7 +72,7 @@ $latests = [
 
             <li class="latests-list__item index-list__item">
               <h3 class="latests-list__item-title">
-                <a href="/discussion.php?id=<?= $discussion["id"]; ?>"><i class="<?= $discussion["category_icon"]; ?>" aria-hidden="true"></i><?= $discussion["title"]; ?></a>
+                <a href="/discussion.php?id=<?= $discussion["id"]; ?>&page=1&limit=10"><i class="<?= $discussion["category_icon"]; ?>" aria-hidden="true"></i><?= $discussion["title"]; ?></a>
               </h3>
               <div class="">
                 <p>par <a href="#"><?= $discussion["username"]; ?></a></p>

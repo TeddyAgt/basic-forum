@@ -1,6 +1,8 @@
 <?php
 
 $discussionId = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT);
+$page = filter_input(INPUT_GET, "page", FILTER_SANITIZE_NUMBER_INT) ?? 1;
+$limit = filter_input(INPUT_GET, "limit", FILTER_SANITIZE_NUMBER_INT) ?? 10;
 $replyToMessage = filter_input(INPUT_GET, "replyto", FILTER_SANITIZE_NUMBER_INT) ?? "";
 
 if (!$discussionId) {
@@ -12,7 +14,7 @@ $userAccess = require_once __DIR__ . "/database/models/db_users.php";
 $sessionAccess = require_once __DIR__ . "/database/models/db_sessions.php";
 $discussionAccess = require_once __DIR__ . "/database/models/db_discussions.php";
 
-$discussion = $discussionAccess->getDiscussionById($discussionId);
+$discussion = $discussionAccess->getDiscussionPageById($discussionId, $page, $limit);
 $user = $sessionAccess->isLoggedIn();
 // echo "<pre>";
 // var_dump($discussion);
@@ -70,6 +72,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <section class="discussion-section section-1200">
 
+      <!-- Pagination haut -->
+      <div class="pagination">
+        <span>Pages: </span>
+        <?php if ($discussion->pages === 1) : ?>
+          <span class="pagination__link">1</span>
+        <?php elseif ($discussion->pages === 2) : ?>
+          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=1&limit=10" class="pagination__link">1</a>
+          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=2&limit=10" class="pagination__link">2</a>
+        <?php else : ?>
+          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=1&limit=10" class="pagination__link">Première page</a>
+          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=<?= $page - 1; ?>&limit=10" class="pagination__link">Précédente</a>
+          <span class="pagination__link pagination__link--active"><?= $page; ?></span>
+          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=<?= $page + 1 ?>&limit=10" class="pagination__link">Suivante</a>
+          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=2&limit=10" class="pagination__link">Dernière page</a>
+        <?php endif; ?>
+
+      </div>
+
+      <!-- Liste des messages -->
       <?php if (count($discussion->messages)) : ?>
         <?php foreach ($discussion->messages as $message) : ?>
           <article class="black-card discussion-section__message" id="<?= $message->id; ?>">
@@ -118,6 +139,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <?php endforeach; ?>
       <?php endif; ?>
 
+      <!-- Pagination bas -->
+      <div class="pagination">
+        <span>Pages: </span>
+        <?php if ($discussion->pages === 1) : ?>
+          <span class="pagination__link">1</span>
+        <?php elseif ($discussion->pages === 2) : ?>
+          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=1&limit=10" class="pagination__link">1</a>
+          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=2&limit=10" class="pagination__link">2</a>
+        <?php else : ?>
+          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=1&limit=10" class="pagination__link">Première page</a>
+          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=<?= $page - 1; ?>&limit=10" class="pagination__link">Précédente</a>
+          <span class="pagination__link pagination__link--active"><?= $page; ?></span>
+          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=<?= $page + 1 ?>&limit=10" class="pagination__link">Suivante</a>
+          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=2&limit=10" class="pagination__link">Dernière page</a>
+        <?php endif; ?>
+
+      </div>
+
       <article class="discussion-section__send-response-article black-card">
         <h2 class="section-title">Envoyer une réponse</h2>
 
@@ -143,6 +182,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           </div>
         <?php endif; ?>
       </article>
+
 
     </section>
 
