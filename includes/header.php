@@ -2,7 +2,7 @@
 $user = $sessionAccess->isLoggedIn();
 ?>
 
-<header>
+<header class="main-header">
   <a href="./index.php" title="Retour à l'accueil" class="header__logo">Forum</a>
 
   <div class="header-search" role="search">
@@ -20,7 +20,9 @@ $user = $sessionAccess->isLoggedIn();
 
     <?php if ($user) : ?>
 
-      <a href="./profile.php" class="main-navigation__link <?= $_SERVER["REQUEST_URI"] === "/profile.php" ? "main-navigation__link--active" : ""; ?>" title="Profil">Profil</a>
+      <a href="./profile.php" class="main-navigation__link main-navigation__link--profile <?= $_SERVER["REQUEST_URI"] === "/profile.php" ? "main-navigation__link--active" : ""; ?>" title="Profil" aria-label="Profil">
+        <img src="<?= $user["profile_picture"]; ?>" alt="profile">
+      </a>
       <a href="./logout.php" class="main-navigation__link <?= $_SERVER["REQUEST_URI"] === "/logout.php" ? "main-navigation__link--active" : ""; ?>" title="Déconnexion">Déconnexion</a>
 
     <?php else : ?>

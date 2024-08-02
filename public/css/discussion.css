@@ -1,3 +1,14 @@
+.pagination {
+  margin: 8px 4px 8px 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.pagination__link--active {
+  color: var(--blue-primary);
+}
+
 .discussion-section__message {
   display: grid;
   grid-template-columns: 240px 1fr;

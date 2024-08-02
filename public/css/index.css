@@ -61,28 +61,3 @@
   color: var(--blue-primary);
   margin-right: 8px;
 }
-
-.latests-article {
-  display: none;
-}
-
-.latests-article.active {
-  display: block;
-}
-
-.latests-list {
-  list-style: none;
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.latests-list__item {
-  padding: 8px;
-  text-decoration: none;
-}
-
-.latests-list__item-title i {
-  color: var(--blue-primary);
-  margin-right: 8px;
-}

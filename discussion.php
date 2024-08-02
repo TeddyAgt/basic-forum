@@ -78,14 +78,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <?php if ($discussion->pages === 1) : ?>
           <span class="pagination__link">1</span>
         <?php elseif ($discussion->pages === 2) : ?>
-          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=1&limit=10" class="pagination__link">1</a>
-          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=2&limit=10" class="pagination__link">2</a>
+          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=1&limit=10" class="pagination__link default-link">1</a>
+          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=2&limit=10" class="pagination__link default-link">2</a>
         <?php else : ?>
-          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=1&limit=10" class="pagination__link">Première page</a>
-          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=<?= $page - 1; ?>&limit=10" class="pagination__link">Précédente</a>
+          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=1&limit=10" class="pagination__link default-link">Première page</a>
+          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=<?= $page - 1; ?>&limit=10" class="pagination__link default-link">Précédente</a>
           <span class="pagination__link pagination__link--active"><?= $page; ?></span>
-          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=<?= $page + 1 ?>&limit=10" class="pagination__link">Suivante</a>
-          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=2&limit=10" class="pagination__link">Dernière page</a>
+          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=<?= $page + 1 ?>&limit=10" class="pagination__link default-link">Suivante</a>
+          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=2&limit=10" class="pagination__link default-link">Dernière page</a>
         <?php endif; ?>
 
       </div>
@@ -100,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <img src="<?= $message->author["profilePicture"]; ?>" alt="">
               </div>
 
-              <a href="#" class="head__profile-username"><?= $message->author["username"]; ?></a>
+              <a href="#" class="head__profile-username default-link"><?= $message->author["username"]; ?></a>
 
               <p class="head__message-date"><?= $message->creationDate; ?></p>
             </div>
@@ -113,7 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                 <div class="body__responds-to-message">
                   <p class="responds-to-message__user">Réponse à
-                    <a href="/discussion.php?id=5#<?= $originalMessage->id; ?>" class="body__profile-username"><?= $originalMessage->author["username"]; ?></a>:
+                    <a href="/discussion.php?id=5#<?= $originalMessage->id; ?>" class="body__profile-username default-link"><?= $originalMessage->author["username"]; ?></a>:
                   </p>
                   <p class="body__message-text body__message-text--response">
                     <?= $originalMessage->text; ?>
@@ -145,14 +145,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <?php if ($discussion->pages === 1) : ?>
           <span class="pagination__link">1</span>
         <?php elseif ($discussion->pages === 2) : ?>
-          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=1&limit=10" class="pagination__link">1</a>
-          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=2&limit=10" class="pagination__link">2</a>
+          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=1&limit=10" class="pagination__link default-link">1</a>
+          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=2&limit=10" class="pagination__link default-link">2</a>
         <?php else : ?>
-          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=1&limit=10" class="pagination__link">Première page</a>
-          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=<?= $page - 1; ?>&limit=10" class="pagination__link">Précédente</a>
+          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=1&limit=10" class="pagination__link default-link">Première page</a>
+          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=<?= $page - 1; ?>&limit=10" class="pagination__link default-link">Précédente</a>
           <span class="pagination__link pagination__link--active"><?= $page; ?></span>
-          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=<?= $page + 1 ?>&limit=10" class="pagination__link">Suivante</a>
-          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=2&limit=10" class="pagination__link">Dernière page</a>
+          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=<?= $page + 1 ?>&limit=10" class="pagination__link default-link">Suivante</a>
+          <a href="/discussion.php?id=<?= $discussion->id; ?>&page=2&limit=10" class="pagination__link default-link">Dernière page</a>
         <?php endif; ?>
 
       </div>

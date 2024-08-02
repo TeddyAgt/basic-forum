@@ -58,7 +58,7 @@ $latests = [
 
     <!-- Récents -->
     <section class="latests-section black-card section-1200">
-      <button type="button" class="btn btn--inline see-latests-btn" data-latests="discussions">Derniers sujets</button>
+      <button type="button" class="btn btn--inline see-latests-btn see-latests-btn--active" data-latests="discussions">Derniers sujets</button>
       <button type="button" class="btn btn--inline see-latests-btn" data-latests="messages">Derniers messages</button>
       <div class="separator--horizontal"></div>
 
@@ -99,7 +99,7 @@ $latests = [
 
             <li class="latests-list__item index-list__item">
               <h3 class="latests-list__item-title">
-                <a href="/discussion.php?id=<?= $message["discussion_id"]; ?>"><?= $message["discussion_title"]; ?></a>
+                <a href="/discussion.php?id=<?= $message["discussion_id"]; ?>&page=1&limit=10"><?= $message["discussion_title"]; ?></a>
               </h3>
               <div class="">
                 <p>par <a href="#"><?= $message["username"]; ?></a></p>

@@ -19,8 +19,10 @@ if (!$user) {
   http_response_code(400);
 } elseif ($likeAccess->hasLiked($messageId, $user["id"])) {
   $nbrOfLike = $likeAccess->deleteOneLike($messageId, $user["id"]);
+  header("Content-type: application/json; charset=utf-8");
   echo json_encode($nbrOfLike);
 } else {
   $nbrOfLike = $likeAccess->createOneLike($messageId, $user["id"]);
+  header("Content-type: application/json; charset=utf-8");
   echo json_encode($nbrOfLike);
 }

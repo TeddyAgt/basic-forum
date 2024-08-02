@@ -11,11 +11,13 @@ class DiscussionAccess
   // Discussions PDO Statements
   private PDOStatement $statementCreateOneDiscussion;
   private PDOStatement $statementGetLastNDiscussions;
+  private PDOStatement $statementGetLastNDiscussionsByUser;
   private PDOStatement $statementGetDiscussionById;
 
   // Messages PDO Statements
   private PDOStatement $statementCreateOneMessage;
   private PDOStatement $statementGetLastNMessages;
+  private PDOStatement $statementGetLastNMessagesByUser;
   private PDOStatement $statementGetMessagesByDiscussionId;
   private PDOStatement $statementGetMessagesPageByDiscussionId;
 
@@ -70,6 +72,33 @@ class DiscussionAccess
         LIMIT :N;
     ");
 
+    $this->statementGetLastNDiscussionsByUser = $pdo->prepare("
+      SELECT 
+        discussions.*,
+        categories.name AS category_name,
+        categories.icon AS category_icon,
+        (
+          SELECT COUNT(discussion_id)
+          FROM messages
+          WHERE discussions.id = messages.discussion_id
+        ) AS nb_responses, 
+        (
+          SELECT creation_date
+          FROM messages
+          WHERE discussions.id = messages.discussion_id
+          ORDER BY creation_date DESC
+          LIMIT 1
+        ) AS latest_response,
+        users.username
+        FROM discussions
+        INNER JOIN categories ON discussions.category_id = categories.id
+        INNER JOIN users ON discussions.author_id = users.id
+        WHERE discussions.author_id = :userId
+        GROUP BY discussions.id
+        ORDER BY creation_date DESC
+        LIMIT :N;
+    ");
+
     // Messages Statements Preparation
     $this->statementCreateOneMessage = $pdo->prepare("
       INSERT INTO messages (author_id, discussion_id, text, responds_to)
@@ -118,6 +147,28 @@ class DiscussionAccess
         INNER JOIN discussions ON m1.discussion_id = discussions.id
         INNER JOIN categories ON discussions.category_id = categories.id
         INNER JOIN users ON m1.author_id = users.id
+        GROUP BY m1.id
+        ORDER BY creation_date DESC
+        LIMIT :N;
+    ");
+
+    $this->statementGetLastNMessagesByUser = $pdo->prepare("
+      SELECT 
+        m1.*,
+        discussions.title AS discussion_title,
+        categories.name AS category_name,
+        categories.icon AS category_icon,
+        (
+          SELECT COUNT(discussion_id)
+          FROM messages AS m2
+          WHERE m1.discussion_id = m2.discussion_id
+        ) AS nb_responses,
+        users.username
+        FROM messages AS m1
+        INNER JOIN discussions ON m1.discussion_id = discussions.id
+        INNER JOIN categories ON discussions.category_id = categories.id
+        INNER JOIN users ON m1.author_id = users.id
+        WHERE m1.author_id = :userId
         GROUP BY m1.id
         ORDER BY creation_date DESC
         LIMIT :N;
@@ -189,6 +240,14 @@ class DiscussionAccess
     return $this->statementGetLastNDiscussions->fetchAll() ?? [];
   }
 
+  public function getLastNDiscussionsByUser(int $userId, int $n = 10): array
+  {
+    $this->statementGetLastNDiscussionsByUser->bindValue(":N", $n, PDO::PARAM_INT);
+    $this->statementGetLastNDiscussionsByUser->bindValue(":userId", $userId);
+    $this->statementGetLastNDiscussionsByUser->execute();
+    return $this->statementGetLastNDiscussionsByUser->fetchAll() ?? [];
+  }
+
   // Messages CRUD Methods
   public function createOneMessage(array $message): void
   {
@@ -220,6 +279,14 @@ class DiscussionAccess
     $this->statementGetLastNMessages->bindValue(":N", $n, PDO::PARAM_INT);
     $this->statementGetLastNMessages->execute();
     return $this->statementGetLastNMessages->fetchAll() ?? [];
+  }
+
+  public function getLastNMessagesByUser(int $userId, int $n = 10): array
+  {
+    $this->statementGetLastNMessagesByUser->bindValue(":N", $n, PDO::PARAM_INT);
+    $this->statementGetLastNMessagesByUser->bindValue(":userId", $userId);
+    $this->statementGetLastNMessagesByUser->execute();
+    return $this->statementGetLastNMessagesByUser->fetchAll() ?? [];
   }
 }
 
