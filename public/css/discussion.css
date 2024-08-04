@@ -57,13 +57,26 @@
 .body__message-text:not(.body__message-text--response) {
   white-space: pre-wrap;
   margin-bottom: auto;
+  margin-right: 40px;
+}
+
+.body-message-text--deleted {
+  font-style: italic;
+  color: var(--light-grey);
+}
+
+.body__action-group {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  top: 0;
+  right: 0;
 }
 
 .body__reply-link {
-  position: absolute;
-  top: 0;
-  right: 0;
   color: #00fff5;
+  text-decoration: none;
   transition: opacity 0.2s ease-out;
 }
 
@@ -80,18 +93,21 @@
   gap: 8px;
 }
 
-.like-btn {
+.like-btn,
+.body__delete-btn {
   color: #00fff5;
   background: none;
   border: none;
   transition: opacity 0.2s ease-out;
 }
 
-.like-btn i {
+.like-btn i,
+.body__delete-btn i {
   pointer-events: none;
 }
 
-.like-btn:hover {
+.like-btn:hover,
+.body__delete-btn:hover {
   opacity: 0.68;
   transition: opacity 0.2s ease-out;
 }

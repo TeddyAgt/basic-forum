@@ -20,6 +20,8 @@ class DiscussionAccess
   private PDOStatement $statementGetLastNMessagesByUser;
   private PDOStatement $statementGetMessagesByDiscussionId;
   private PDOStatement $statementGetMessagesPageByDiscussionId;
+  private PDOStatement $statementGetMessageAuthor;
+  private PDOStatement $statementDeleteMessage;
 
   public function __construct(private PDO $pdo)
   {
@@ -106,7 +108,7 @@ class DiscussionAccess
     ");
 
     $this->statementGetMessagesByDiscussionId = $pdo->prepare("
-      SELECT messages.*, username, profile_picture, (
+      SELECT messages.*, username, role, profile_picture, (
         SELECT COUNT(user_id)
         FROM likes
         WHERE message_id = messages.id
@@ -118,7 +120,7 @@ class DiscussionAccess
     ");
 
     $this->statementGetMessagesPageByDiscussionId = $pdo->prepare("
-      SELECT messages.*, username, profile_picture, (
+      SELECT messages.*, username, role, profile_picture, (
         SELECT COUNT(user_id)
         FROM likes
         WHERE message_id = messages.id
@@ -156,7 +158,7 @@ class DiscussionAccess
       SELECT 
         m1.*,
         discussions.title AS discussion_title,
-        categories.name AS category_name,
+        categories.name AS category_name, 
         categories.icon AS category_icon,
         (
           SELECT COUNT(discussion_id)
@@ -172,6 +174,20 @@ class DiscussionAccess
         GROUP BY m1.id
         ORDER BY creation_date DESC
         LIMIT :N;
+    ");
+
+    $this->statementGetMessageAuthor = $pdo->prepare("
+      SELECT author_id
+      FROM messages
+      WHERE id = :id
+    ");
+
+    $this->statementDeleteMessage = $pdo->prepare("
+      UPDATE messages
+      SET text = :text,
+      modification_date = NOW(),
+      status = 0
+      WHERE id = :id  
     ");
   }
 
@@ -287,6 +303,21 @@ class DiscussionAccess
     $this->statementGetLastNMessagesByUser->bindValue(":userId", $userId);
     $this->statementGetLastNMessagesByUser->execute();
     return $this->statementGetLastNMessagesByUser->fetchAll() ?? [];
+  }
+
+
+  public function GetMessageAuthor(int $id): int
+  {
+    $this->statementGetMessageAuthor->bindValue(":id", $id);
+    $this->statementGetMessageAuthor->execute();
+    return $this->statementGetMessageAuthor->fetch()["author_id"];
+  }
+
+  public function deleteMessage(string $text, int $id): void
+  {
+    $this->statementDeleteMessage->bindValue(":text", $text);
+    $this->statementDeleteMessage->bindValue(":id", $id);
+    $this->statementDeleteMessage->execute();
   }
 }
 

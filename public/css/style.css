@@ -104,8 +104,13 @@ main {
   color: var(--black-dark);
 }
 
+.btn--warning {
+  background: var(--error);
+}
+
 .btn--primary:hover,
 .btn--white:hover,
+.btn--warning:hover,
 .see-latests-btn--active {
   opacity: 0.75;
 }
@@ -237,11 +242,19 @@ label {
   right: 0;
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
-  display: flex;
   justify-content: center;
   align-items: center;
   background: rgba(0, 0, 0, 0.2);
   padding: 16px;
+  display: none;
+}
+
+.overlay.active {
+  display: flex;
+}
+
+.moderator {
+  color: var(--blue-primary);
 }
 
 /* Header */

@@ -100,8 +100,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <img src="<?= $message->author["profilePicture"]; ?>" alt="">
               </div>
 
-              <a href="#" class="head__profile-username default-link"><?= $message->author["username"]; ?></a>
-
+              <a href="#" class="head__profile-username default-link <?= $message->author["role"] === "moderator" ? "moderator" : ""; ?>"><?= $message->author["username"]; ?></a>
+              <?= $message->author["role"] === "moderator" ? "<p>(modérateur)</p>" : ""; ?>
               <p class="head__message-date"><?= $message->creationDate; ?></p>
             </div>
 
@@ -113,16 +113,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                 <div class="body__responds-to-message">
                   <p class="responds-to-message__user">Réponse à
-                    <a href="/discussion.php?id=5#<?= $originalMessage->id; ?>" class="body__profile-username default-link"><?= $originalMessage->author["username"]; ?></a>:
+                    <a href="/discussion.php?id=<?= $discussion->id; ?>#<?= $originalMessage->id; ?>" class="body__profile-username default-link"><?= $originalMessage->author["username"]; ?></a>:
                   </p>
-                  <p class="body__message-text body__message-text--response">
+                  <p class="body__message-text body__message-text--response <?= !$message->status ? "body-message-text--deleted" : ""; ?>">
                     <?= $originalMessage->text; ?>
                   </p>
                 </div>
 
               <?php endif; ?>
 
-              <p class="body__message-text"><?= $message->text; ?></p>
+              <p class="body__message-text <?= !$message->status ? "body-message-text--deleted" : ""; ?>"><?= $message->text; ?></p>
+
+              <div class="body__action-group">
+                <a href="discussion.php?id=<?= $discussionId; ?>&replyto=<?= $message->id; ?>#send-message-form" class="body__reply-link" aria-label="Répondre à ce message" title="Répondre">
+                  <i class="fa-solid fa-reply" aria-hidden="true"></i>
+                </a>
+                <?php if ($message->status && ($user["role"] === "administrator" || $user["role"] === "moderator" || $user["id"] === $message->author["id"])) : ?>
+                  <button class="body__delete-btn" aria-label="Supprimer ce message" title="Supprimer" data-message="<?= $message->id; ?>">
+                    <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+                  </button>
+                <?php endif; ?>
+              </div>
 
               <div class="body__like-container">
                 <button class="like-btn" aria-label="Liker ce message" title="Liker ce message" data-message="<?= $message->id; ?>">
@@ -131,9 +142,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <p class="nbr-of-likes"><?= $message->likes; ?></p>
               </div>
 
-              <a href="discussion.php?id=<?= $discussionId; ?>&replyto=<?= $message->id; ?>#send-message-form" class="body__reply-link" aria-label="Répondre à ce message" title="Répondre">
-                <i class="fa-solid fa-reply" aria-hidden="true"></i>
-              </a>
             </div>
           </article>
         <?php endforeach; ?>
@@ -183,7 +191,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <?php endif; ?>
       </article>
 
+      <!-- Popup de confirmation de suppression de message -->
+      <div class="overlay">
+        <form class="delete-message-confirmation-popup black-card" action="" method="POST">
+          <h2 class="popup-title">Souhaitez-vous vraiment supprimer ce message ?</h2>
 
+          <div class="popup-control-group">
+            <button type="button" class="btn btn--primary" id="cancel-delete-message-btn">Annuler</button>
+            <button type="submit" class="btn btn--warning">Supprimer</button>
+          </div>
+          <div class="input-group">
+            <label for="password">Mot de passe:</label>
+            <!-- <input type="password" name="password" id="password"> -->
+            <!-- <p class="form-error" id="delete-message-popup-error"></p> -->
+            <input type="number" id="message-id" name="message-id" hidden value="">
+            <input type="text" id="url" name="url" hidden value="">
+          </div>
+        </form>
+      </div>
     </section>
 
   </main>

@@ -12,6 +12,8 @@ $discussionAccess = require_once __DIR__ . "/database/models/db_discussions.php"
 
 $user = $sessionAccess->isLoggedIn();
 
+
+
 if (!$user) {
   http_response_code(403);
 } else {

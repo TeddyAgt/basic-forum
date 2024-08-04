@@ -33,6 +33,7 @@ class Message
   public string $creationDate;
   public string $modificationDate;
   public ?int $respondsTo;
+  public int $status;
   public int $likes;
 
   public function __construct(array $message)
@@ -41,12 +42,14 @@ class Message
     $this->author = [
       "id" => $message["author_id"],
       "username" => $message["username"],
+      "role" => $message["role"],
       "profilePicture" => $message["profile_picture"]
     ];
     $this->text = $message["text"];
     $this->creationDate = $message["creation_date"];
     $this->modificationDate = $message["modification_date"] ?? "";
     $this->respondsTo = $message["responds_to"];
+    $this->status = $message["status"];
     $this->likes = $message["likes"];
   }
 }

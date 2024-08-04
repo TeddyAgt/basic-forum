@@ -45,7 +45,7 @@ $latests = [
         <?php foreach ($categoriesList as $i => $category) : ?>
 
           <li class="categories-list__item index-list__item">
-            <a href="">
+            <a href="./category.php?id=<?= $category["id"]; ?>" title="Aller à la catégorie <?= $category["name"] ?>">
               <i class="<?= $category["icon"] ?>" aria-hidden="true"></i>
               <?= $category["name"]; ?>
             </a>
@@ -102,6 +102,7 @@ $latests = [
                 <a href="/discussion.php?id=<?= $message["discussion_id"]; ?>&page=1&limit=10"><?= $message["discussion_title"]; ?></a>
               </h3>
               <div class="">
+                <p><?= $message["text"]; ?></p>
                 <p>par <a href="#"><?= $message["username"]; ?></a></p>
                 <p>le <?= $message["creation_date"]; ?></p>
               </div>
