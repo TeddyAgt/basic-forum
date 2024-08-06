@@ -22,7 +22,7 @@ $latests = [
 <head> <!-- ᓚᘏᗢ -->
   <?php require_once "./includes/head.php"; ?>
   <link rel="stylesheet" href="./public/css/index.css">
-  <title>Forum - Accueil</title>
+  <title>Accueil - Forum</title>
 </head>
 
 <body>
@@ -30,7 +30,7 @@ $latests = [
 
   <main>
 
-    <section class="black-card index-header section-1200">
+    <section class="black-card section-header section-1200">
       <h1 class="main-title">Forum</h1>
       <a href="./discussion-form.php" class="btn btn--primary">Commencer un nouveau sujet</a>
     </section>
@@ -72,14 +72,16 @@ $latests = [
 
             <li class="latests-list__item index-list__item">
               <h3 class="latests-list__item-title">
-                <a href="/discussion.php?id=<?= $discussion["id"]; ?>&page=1&limit=10"><i class="<?= $discussion["category_icon"]; ?>" aria-hidden="true"></i><?= $discussion["title"]; ?></a>
+                <a href="/discussion.php?id=<?= $discussion["id"]; ?>&page=1&limit=10">
+                  <i class="<?= $discussion["category_icon"]; ?>" aria-hidden="true"></i><?= $discussion["title"]; ?>
+                </a>
               </h3>
-              <div class="">
+              <div>
                 <p>par <a href="#"><?= $discussion["username"]; ?></a></p>
                 <p>le <?= $discussion["creation_date"]; ?></p>
                 <p><?= $discussion["nb_responses"], $discussion["nb_responses"] > 1 ? " messages" : " message"; ?></p>
               </div>
-              <div class="">
+              <div>
                 <p>Dernière réponse: <?= $discussion["latest_response"]; ?></p>
               </div>
             </li>

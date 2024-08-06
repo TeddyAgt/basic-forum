@@ -9,7 +9,7 @@ $user = $sessionAccess->isLoggedIn();
 
 // Messages d'erreur
 const ERROR_REQUIRED = "Ce champs est requis";
-const ERROR_TITLE_TOO_SHORT = "Le titre doit faire 20 caractères minimum";
+const ERROR_TITLE_TOO_SHORT = "Le titre doit faire 15 caractères minimum";
 const ERROR_CONTENT_TOO_SHORT = "Le message doit faire 30 caractères minimum";
 
 $errors = [
@@ -31,13 +31,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   if (!$title) {
     $errors["title"] = ERROR_REQUIRED;
   } elseif (mb_strlen($title) < 20) {
-    $errors["title"] = ERROR_TITLE_TOO_SHORT;
+    // $errors["title"] = ERROR_TITLE_TOO_SHORT;
   }
 
   if (!$content) {
     $errors["content"] = ERROR_REQUIRED;
   } elseif (mb_strlen($content) < 30) {
-    $errors["content"] = ERROR_CONTENT_TOO_SHORT;
+    // $errors["content"] = ERROR_CONTENT_TOO_SHORT;
   }
 
   if (empty(array_filter($errors, fn ($e) => $e !== ""))) {
@@ -84,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         <div class="input-group">
           <label for="title">Titre</label>
-          <input type="text" name="title" id="title" class="input-big">
+          <input type="text" name="title" id="title" class="input-big" value="<?= $title ?? ""; ?>">
           <?php if ($errors["title"]) : ?>
             <p class="form-error"><?= $errors["title"]; ?></p>
           <?php endif; ?>
@@ -92,7 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         <div class="input-group">
           <label for="content">Message</label>
-          <textarea name="content" id="content" class="content-input"></textarea>
+          <textarea name="content" id="content" class="content-input"><?= $content ?? ""; ?></textarea>
           <?php if ($errors["content"]) : ?>
             <p class="form-error"><?= $errors["content"]; ?></p>
           <?php endif; ?>

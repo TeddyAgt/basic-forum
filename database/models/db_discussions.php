@@ -1,5 +1,6 @@
 <?php
 
+require_once __DIR__ . "/../../Classes/Category.classe.php";
 require_once __DIR__ . "/../../Classes/Discussion.classe.php";
 
 class DiscussionAccess
@@ -7,12 +8,15 @@ class DiscussionAccess
 
   // Categories PDO Statements
   private PDOStatement $statementGetAllCategories;
+  private PDOStatement $statementGetCategoryById;
 
   // Discussions PDO Statements
   private PDOStatement $statementCreateOneDiscussion;
   private PDOStatement $statementGetLastNDiscussions;
   private PDOStatement $statementGetLastNDiscussionsByUser;
   private PDOStatement $statementGetDiscussionById;
+  private PDOStatement $statementGetDiscussionsByCategory;
+  // private PDOStatement $statementGetDiscussionsCountByCategory;
 
   // Messages PDO Statements
   private PDOStatement $statementCreateOneMessage;
@@ -22,6 +26,7 @@ class DiscussionAccess
   private PDOStatement $statementGetMessagesPageByDiscussionId;
   private PDOStatement $statementGetMessageAuthor;
   private PDOStatement $statementDeleteMessage;
+  private PDOStatement $statementGetMessagesByCategory;
 
   public function __construct(private PDO $pdo)
   {
@@ -30,6 +35,17 @@ class DiscussionAccess
       SELECT *
       FROM categories
       ORDER BY name ASC
+    ");
+
+    $this->statementGetCategoryById = $pdo->prepare("
+      SELECT *,
+        (
+          SELECT COUNT(id)
+          FROM discussions
+          WHERE category_id = :id
+        ) AS nbr_of_discussions
+      FROM categories
+      WHERE id = :id
     ");
 
     // Discussions Statements Preparation
@@ -101,6 +117,40 @@ class DiscussionAccess
         LIMIT :N;
     ");
 
+    $this->statementGetDiscussionsByCategory = $pdo->prepare("
+      SELECT 
+        discussions.*,
+        categories.name AS category_name,
+        categories.icon AS category_icon,
+        (
+          SELECT COUNT(discussion_id)
+          FROM messages
+          WHERE discussions.id = messages.discussion_id
+        ) AS nb_responses, 
+        (
+          SELECT creation_date
+          FROM messages
+          WHERE discussions.id = messages.discussion_id
+          ORDER BY creation_date DESC
+          LIMIT 1
+        ) AS latest_response,
+        users.username
+        FROM discussions
+        INNER JOIN categories ON discussions.category_id = categories.id
+        INNER JOIN users ON discussions.author_id = users.id
+        WHERE discussions.category_id = :categoryId
+        GROUP BY discussions.id
+        ORDER BY creation_date DESC
+        LIMIT :N
+        OFFSET :page;
+    ");
+
+    // $this->statementGetDiscussionsCountByCategory = $pdo->prepare("
+    //   SELECT COUNT(id) as nbr_of_discussions
+    //   FROM discussions
+    //   WHERE category_id = :categoryId;
+    // ");
+
     // Messages Statements Preparation
     $this->statementCreateOneMessage = $pdo->prepare("
       INSERT INTO messages (author_id, discussion_id, text, responds_to)
@@ -128,6 +178,17 @@ class DiscussionAccess
       FROM messages
       INNER JOIN users ON messages.author_id = users.id
       WHERE discussion_id = :discussionId
+      ORDER BY id ASC
+      LIMIT :limit
+      OFFSET :page
+    ");
+
+    $this->statementGetMessagesByCategory = $pdo->prepare("
+      SELECT messages.*, username
+      FROM messages
+      INNER JOIN users ON messages.author_id = users.id
+      INNER JOIN discussions ON discussion_id = discussions.id
+      WHERE category_id = :categoryId
       ORDER BY id ASC
       LIMIT :limit
       OFFSET :page
@@ -198,6 +259,15 @@ class DiscussionAccess
     return $this->statementGetAllCategories->fetchAll();
   }
 
+  public function getCategoryById(int $id): Category
+  {
+    $this->statementGetCategoryById->bindValue(":id", $id);
+    $this->statementGetCategoryById->execute();
+    $category = new Category($this->statementGetCategoryById->fetch());
+    $category->setDiscussions($this->getDiscussionsByCategory($id));
+    return $category;
+  }
+
   // Discussions CRUD Methods
   public function createOneDiscussion(array $discussion): void
   {
@@ -264,6 +334,22 @@ class DiscussionAccess
     return $this->statementGetLastNDiscussionsByUser->fetchAll() ?? [];
   }
 
+  public function getDiscussionsByCategory(int $categoryId, int $n = 10, int $page = 1): array | bool
+  {
+    $this->statementGetDiscussionsByCategory->bindValue(":categoryId", $categoryId);
+    $this->statementGetDiscussionsByCategory->bindValue(":N", $n, PDO::PARAM_INT);
+    $this->statementGetDiscussionsByCategory->bindValue(":page", ($page * $n) - $n, PDO::PARAM_INT);
+    $this->statementGetDiscussionsByCategory->execute();
+    return $this->statementGetDiscussionsByCategory->fetchAll();
+  }
+
+  // public function getDiscussionsCountByCategory(int $categoryId): int | false
+  // {
+  //   $this->statementGetDiscussionsCountByCategory->bindValue(":categoryId", $categoryId);
+  //   $this->statementGetDiscussionsCountByCategory->execute();
+  //   return $this->statementGetDiscussionsCountByCategory->fetch()["nbr_of_discussions"];
+  // }
+
   // Messages CRUD Methods
   public function createOneMessage(array $message): void
   {
@@ -289,6 +375,15 @@ class DiscussionAccess
     $this->statementGetMessagesPageByDiscussionId->execute();
     return $this->statementGetMessagesPageByDiscussionId->fetchAll();
   }
+
+  // public function getMessagesByCategory(int $categoryId, int $page = 1, int $limit = 10): array | bool
+  // {
+  //   $this->statementGetMessagesByCategory->bindValue(":categoryId", $categoryId);
+  //   $this->statementGetMessagesByCategory->bindValue(":page", ($page * $limit) - $limit, PDO::PARAM_INT);
+  //   $this->statementGetMessagesByCategory->bindValue(":limit", $limit, PDO::PARAM_INT);
+  //   $this->statementGetMessagesByCategory->execute();
+  //   return $this->statementGetMessagesByCategory->fetchAll();
+  // }
 
   public function getLastNMessages(int $n = 10): array
   {

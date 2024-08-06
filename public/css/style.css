@@ -73,6 +73,10 @@ main {
   text-align: center;
 }
 
+.section-title {
+  margin-bottom: 16px;
+}
+
 .black-card {
   background: var(--black-light);
   border-radius: 4px;
@@ -129,6 +133,21 @@ main {
 .default-link:hover {
   color: var(--blue-primary);
   transition: color 0.2s ease-out;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-inline: 32px;
+}
+
+.section-header .main-title {
+  margin-bottom: 0;
+}
+
+.section-header .btn {
+  font-size: var(--fz-20);
 }
 
 /* Latests Lists */
