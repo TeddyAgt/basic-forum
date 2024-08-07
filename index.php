@@ -35,9 +35,9 @@ $latests = [
       <a href="./discussion-form.php" class="btn btn--primary">Commencer un nouveau sujet</a>
     </section>
 
-    <!-- Catégories -->
+    <!-- Top Catégories -->
     <section class="topics-section black-card section-1200">
-      <h2 class="section-title">Catégories</h2>
+      <h2 class="section-title">Top Catégories</h2>
       <div class="separator--horizontal"></div>
 
       <ul class="categories-list">
@@ -45,8 +45,8 @@ $latests = [
         <?php foreach ($categoriesList as $i => $category) : ?>
 
           <li class="categories-list__item index-list__item">
-            <a href="./category.php?id=<?= $category["id"]; ?>" title="Aller à la catégorie <?= $category["name"] ?>">
-              <i class="<?= $category["icon"] ?>" aria-hidden="true"></i>
+            <a href="./category.php?id=<?= $category["id"]; ?>" title="Aller à la catégorie <?= $category["name"]; ?>">
+              <i class="<?= $category["icon"]; ?>" aria-hidden="true"></i>
               <?= $category["name"]; ?>
             </a>
           </li>
@@ -54,6 +54,9 @@ $latests = [
         <?php endforeach; ?>
 
       </ul>
+
+      <a href="./category.php" title="Explorer" class="topics-section__see-all-link">Explorer toutes les catégories</a>
+
     </section>
 
     <!-- Récents -->

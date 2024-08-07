@@ -25,6 +25,7 @@ class DiscussionAccess
   private PDOStatement $statementGetMessagesByDiscussionId;
   private PDOStatement $statementGetMessagesPageByDiscussionId;
   private PDOStatement $statementGetMessageAuthor;
+  private PDOStatement $statementArchiveMessage;
   private PDOStatement $statementDeleteMessage;
   private PDOStatement $statementGetMessagesByCategory;
 
@@ -243,12 +244,19 @@ class DiscussionAccess
       WHERE id = :id
     ");
 
+    $this->statementArchiveMessage = $pdo->prepare("
+      INSERT INTO archive_messages
+      SELECT id, text
+        FROM messages
+        WHERE id = :id
+    ");
+
     $this->statementDeleteMessage = $pdo->prepare("
       UPDATE messages
       SET text = :text,
       modification_date = NOW(),
       status = 0
-      WHERE id = :id  
+      WHERE id = :id  ;
     ");
   }
 
@@ -408,8 +416,15 @@ class DiscussionAccess
     return $this->statementGetMessageAuthor->fetch()["author_id"];
   }
 
+  public function archiveMessage(int $id): bool
+  {
+    $this->statementArchiveMessage->bindValue(":id", $id);
+    return $this->statementArchiveMessage->execute();
+  }
+
   public function deleteMessage(string $text, int $id): void
   {
+    $this->archiveMessage($id);
     $this->statementDeleteMessage->bindValue(":text", $text);
     $this->statementDeleteMessage->bindValue(":id", $id);
     $this->statementDeleteMessage->execute();

@@ -20,13 +20,13 @@ class SessionAccess
     $this->statementReadOneSession = $pdo->prepare("
       SELECT *
       FROM sessions
-      WHERE id=:sessionId
+      WHERE id = :sessionId
     ");
 
     $this->statementReadOneUser = $pdo->prepare("
       SELECT *
       FROM users
-      WHERE id=:userId
+      WHERE id = :userId
     ");
 
     $this->statementDeleteOne = $pdo->prepare("
@@ -61,7 +61,7 @@ class SessionAccess
         $session = $this->statementReadOneSession->fetch();
 
         if ($session) {
-          $this->statementReadOneUser->bindValue("userId", $session["user_id"]);
+          $this->statementReadOneUser->bindValue(":userId", $session["user_id"]);
           $this->statementReadOneUser->execute();
           $user = $this->statementReadOneUser->fetch();
         }

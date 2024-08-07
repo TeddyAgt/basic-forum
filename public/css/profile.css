@@ -25,6 +25,7 @@
   align-items: center;
   overflow: hidden;
   background: var(--black-dark);
+  box-shadow: 0 5px 7px rgba(0, 0, 0, 0.6);
 }
 
 .profile-picture__img {
