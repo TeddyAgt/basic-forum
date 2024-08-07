@@ -15,12 +15,12 @@ async function fetchActivities() {
   if (response.ok) {
     const activities = await response.json();
 
-    showUserActivities(activities);
+    displayUserActivities(activities);
   }
 }
 fetchActivities();
 
-function showUserActivities(activities) {
+function displayUserActivities(activities) {
   // discussions
   if (!activities.discussions.length) {
     latestsLists[0].innerHTML =

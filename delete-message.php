@@ -30,9 +30,9 @@ if (!$user) {
     exit;
   }
 
-  if ($discussionAccess->GetMessageAuthor($messageId) === $user["id"]) {
+  if ($discussionAccess->GetMessageAuthor($messageId) === $user->id) {
     $discussionAccess->deleteMessage("Ce message a été supprimé par l'utilisateur.", $messageId);
-  } elseif ($user["role"] === "administrator" || $user["role"] === "moderator") {
+  } elseif ($user->role === "administrator" || $user->role === "moderator") {
     $discussionAccess->deleteMessage("Ce message a été supprimé par un modérateur.", $messageId);
   }
 

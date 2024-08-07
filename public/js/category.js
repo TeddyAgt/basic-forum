@@ -1,23 +1,27 @@
-// Éléments du DOM
+// // Éléments du DOM
+// const browseCategoriesSection = document.querySelector(
+//   ".browse-categories-section"
+// );
 
-// Constantes et variables globales ******************************
-const categoryId = new URLSearchParams(window.location.search).get("id") ?? "";
+// // Constantes et variables globales ******************************
+// const categoryId = new URLSearchParams(window.location.search).get("id") ?? "";
 
-// Event Listeners
+// // Event Listeners
 
-// Fonctions
-async function fetchCategory() {
-  try {
-    const response = await fetch(
-      `./actions/get-categories.php${categoryId ? "?id=" + categoryId : ""}`
-    );
+// // Fonctions
+// async function fetchCategory() {
+//   try {
+//     const response = await fetch(
+//       `./actions/get-categories.php${categoryId ? "?id=" + categoryId : ""}`
+//     );
 
-    if (response.ok) {
-      const category = await response.json();
-      console.log(category);
-    }
-  } catch (e) {
-    console.log(e);
-  }
-}
-fetchCategory();
+//     if (response.ok) {
+//       const categories = await response.json();
+//       console.log(categories);
+//       categories.forEach((category) => displayCategory(category));
+//     }
+//   } catch (e) {
+//     console.log(e);
+//   }
+// }
+// fetchCategory();

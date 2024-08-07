@@ -36,11 +36,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Vérification des credentials
     if (!$user) {
       $errors["email"] = ERROR_EMAIL_UNKNOWN;
-    } elseif (!password_verify($password, $user["password"])) {
+    } elseif (!password_verify($password, $user->password)) {
       $errors["password"] = ERROR_PASSWORD_WRONG;
     } else {
       // Création de la session
-      $sessionAccess->createSession($user["id"]);
+      $sessionAccess->createSession($user->id);
       header("Location: /");
     }
   }

@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
   if (empty(array_filter($errors, fn ($e) => $e !== ""))) {
     $discussionAccess->createOneDiscussion([
-      "authorId" => $user["id"],
+      "authorId" => $user->id,
       "title" => $title,
       "categoryId" => $category,
       "text" => $content

@@ -128,7 +128,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <a href="discussion.php?id=<?= $discussionId; ?>&replyto=<?= $message->id; ?>#send-message-form" class="body__reply-link" aria-label="Répondre à ce message" title="Répondre">
                   <i class="fa-solid fa-reply" aria-hidden="true"></i>
                 </a>
-                <?php if ($message->status && ($user["role"] === "administrator" || $user["role"] === "moderator" || $user["id"] === $message->author["id"])) : ?>
+                <?php if ($message->status && ($user->role === "administrator" || $user->role === "moderator" || $user->id === $message->author["id"])) : ?>
                   <button class="body__delete-btn" aria-label="Supprimer ce message" title="Supprimer" data-message="<?= $message->id; ?>">
                     <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
                   </button>

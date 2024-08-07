@@ -4,12 +4,15 @@ $userAccess = require_once __DIR__ . "/database/models/db_users.php";
 $sessionAccess = require_once __DIR__ . "/database/models/db_sessions.php";
 
 $user = $sessionAccess->isLoggedIn();
-
+echo "<pre>";
+var_dump($user);
+echo "<pre>";
+echo "</pre>";
 if (!$user) {
   header("Location: /login.php");
 }
 
-$userProfile = $userAccess->getUserProfile($user["id"]);
+$userProfile = $userAccess->getUserProfile($user->id);
 $date = new DateTimeImmutable("now", new DateTimeZone("Europe/Paris"));
 ?>
 

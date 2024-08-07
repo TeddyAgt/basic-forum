@@ -18,8 +18,8 @@ if (!$user) {
   http_response_code(403);
 } else {
   $activities = [
-    "discussions" => $discussionAccess->getLastNDiscussionsByUser(userId: $user["id"]),
-    "messages" => $discussionAccess->getLastNMessagesByUser(userId: $user["id"])
+    "discussions" => $discussionAccess->getLastNDiscussionsByUser(userId: $user->id),
+    "messages" => $discussionAccess->getLastNMessagesByUser(userId: $user->id)
   ];
   header("Content-type: application/json; charset=utf-8");
   echo json_encode($activities);

@@ -267,12 +267,12 @@ class DiscussionAccess
     return $this->statementGetAllCategories->fetchAll();
   }
 
-  public function getCategoryById(int $id): Category
+  public function getCategoryById(int $id, int $limit = 10, int $page = 1): Category
   {
     $this->statementGetCategoryById->bindValue(":id", $id);
     $this->statementGetCategoryById->execute();
     $category = new Category($this->statementGetCategoryById->fetch());
-    $category->setDiscussions($this->getDiscussionsByCategory($id));
+    $category->setDiscussions($this->getDiscussionsByCategory($id, $limit, $page));
     return $category;
   }
 

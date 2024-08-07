@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . "/../../Classes/User.classe.php";
+
 class UserAcces
 {
   private PDOStatement $statementCreateOne;
@@ -67,18 +69,20 @@ class UserAcces
     return $this->statementCreateOne->execute();
   }
 
-  public function getUserByEmail(string $email): array | bool
+  public function getUserByEmail(string $email): User | false
   {
     $this->statementReadOneByEmail->bindValue(":email", $email);
     $this->statementReadOneByEmail->execute();
-    return $this->statementReadOneByEmail->fetch();
+    $user = new User($this->statementReadOneByEmail->fetch());
+    return $user ?? false;
   }
 
-  public function getUserByUsername(string $username): array | bool
+  public function getUserByUsername(string $username): User | false
   {
     $this->statementReadOneByUsername->bindValue(":username", $username);
     $this->statementReadOneByUsername->execute();
-    return $this->statementReadOneByUsername->fetch();
+    $user = new User($this->statementReadOneByUsername->fetch());
+    return $user ?? false;
   }
 
   public function  getUserProfile(int $id): array

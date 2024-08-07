@@ -15,16 +15,16 @@ $messageId = (int) json_decode(file_get_contents("php://input"), true)["messageI
 
 if (!$user) {
   http_response_code(403);
-} elseif ($discussionAccess->GetMessageAuthor($messageId) == $user["id"]) {
+} elseif ($discussionAccess->GetMessageAuthor($messageId) == $user->id) {
   http_response_code(403);
 } elseif (!$messageId) {
   http_response_code(400);
-} elseif ($likeAccess->hasLiked($messageId, $user["id"])) {
-  $nbrOfLike = $likeAccess->deleteOneLike($messageId, $user["id"]);
+} elseif ($likeAccess->hasLiked($messageId, $user->id)) {
+  $nbrOfLike = $likeAccess->deleteOneLike($messageId, $user->id);
   header("Content-type: application/json; charset=utf-8");
   echo json_encode($nbrOfLike);
 } else {
-  $nbrOfLike = $likeAccess->createOneLike($messageId, $user["id"]);
+  $nbrOfLike = $likeAccess->createOneLike($messageId, $user->id);
   header("Content-type: application/json; charset=utf-8");
   echo json_encode($nbrOfLike);
 }

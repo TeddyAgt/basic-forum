@@ -1,9 +1,11 @@
 <?php
 
 $categoryId = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT) ?? "";
+$page = filter_input(INPUT_GET, "page", FILTER_SANITIZE_NUMBER_INT) ?? 1;
+$limit = filter_input(INPUT_GET, "limit", FILTER_SANITIZE_NUMBER_INT) ?? 10;
 
 if (!$categoryId) {
-  // header("Location: /");
+  header("Location: /");
 }
 
 require_once __DIR__ . "/database/db_access.php";

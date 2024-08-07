@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . "/../../Classes/User.classe.php";
+
 class SessionAccess
 {
   private string $secret;
@@ -47,7 +49,7 @@ class SessionAccess
     setcookie("signature", $signature, time() + 1209600, "", "");
   }
 
-  public function isLoggedIn(): array | bool
+  public function isLoggedIn(): User | false
   {
     $sessionId = $_COOKIE["session"] ?? "";
     $signature = $_COOKIE["signature"] ?? "";
@@ -63,7 +65,7 @@ class SessionAccess
         if ($session) {
           $this->statementReadOneUser->bindValue(":userId", $session["user_id"]);
           $this->statementReadOneUser->execute();
-          $user = $this->statementReadOneUser->fetch();
+          $user = new User($this->statementReadOneUser->fetch());
         }
       }
     }
