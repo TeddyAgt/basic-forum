@@ -55,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $errors["confirmation"] = ERROR_PASSWORD_WRONG_CONFIRMATION;
   }
 
-  if (empty(array_filter($errors, fn ($e) => $e !== ""))) {
+  if (empty(array_filter($errors, fn($e) => $e !== ""))) {
     // Création de l'utilisateur
     $userAccess->createUser([
       "email" => $email,

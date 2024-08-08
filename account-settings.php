@@ -14,6 +14,25 @@ if (!$user) {
   }
 }
 
+// Messages d'erreur
+const ERROR_REQUIRED = "Ce champs est requis";
+const ERROR_USERNAME_TOO_SHORT = "Le nom d'utilisateur doit faire 5 caractères minimum";
+const ERROR_USERNAME_ALREADY_EXISTS = "Ce nom d'utilisateur n'est pas disponnible";
+const ERROR_EMAIL_INVALID = "L'adresse mail n'est pas valide";
+const ERROR_EMAIL_ALREADY_EXISTS = "Il y a déjà un compte avec cette adresse mail";
+const ERROR_PASSWORD_TOO_SHORT = "Le mot de passe doit faire 8 caractères minimum";
+const ERROR_PASSWORD_WRONG_CONFIRMATION = "Le mot de passe de confirmation ne correspond pas";
+
+$errors = [
+  'username' => "",
+  'email' => "",
+  'password' => "",
+  'confirmation' => "",
+  "current" => "",
+  "about" => "",
+  "avatar" => ""
+];
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
   $method = (int) filter_input(INPUT_GET, "method", FILTER_SANITIZE_NUMBER_INT) ?? "";
   if (!$method) {
@@ -23,15 +42,39 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   switch ($method) {
       // Modification du nom d'utilisateur
     case 1:
-      $username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? $user->username;
-      $userAccess->updateUsername($user->id, $username);
+      echo "Modification username";
+      $username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "";
+
+      if (!$username) {
+        $errors["username"] = ERROR_REQUIRED;
+      } else if (mb_strlen($username) < 5) {
+        $errors["username"] = ERROR_USERNAME_TOO_SHORT;
+      } else if ($userAccess->usernameExists($username)) {
+        $errors["username"] = ERROR_USERNAME_ALREADY_EXISTS;
+      } else {
+        $userAccess->updateUsername($user->id, $username);
+      }
+
       break;
       // Modification de l'adresse mail
     case 2:
-      # code...
+      echo "Modification email";
+      $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL) ?? "";
+
+      if (!$email) {
+        $errors["email"] = ERROR_REQUIRED;
+      } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors["email"] = ERROR_EMAIL_INVALID;
+      } else if ($userAccess->emailExists($email)) {
+        $errors["email"] = ERROR_EMAIL_ALREADY_EXISTS;
+      } else {
+        $userAccess->updateEmail($user->id, $email);
+      }
+
       break;
       // Modification du mot de passe
     case 3:
+      echo "Modification password";
       # code...
       break;
 
@@ -65,6 +108,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           <label for="username">Nom d'utilisateur</label>
           <input type="text" name="username" id="username" value="<?= $user->username; ?>">
         </div>
+        <?php if ($errors["username"]) : ?>
+          <p class="form-error"><?= $errors["username"]; ?></p>
+        <?php endif; ?>
         <button type="submit" aria-label="Sauvegarder les modifications" title="Sauvegarder les modifications" class="btn btn--primary">
           <i class="fa-regular fa-floppy-disk" aria-hidden="true"></i>
         </button>
@@ -75,6 +121,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           <label for="email">Email</label>
           <input type="email" name="email" id="email" value="<?= $user->email; ?>">
         </div>
+        <?php if ($errors["email"]) : ?>
+          <p class="form-error"><?= $errors["email"]; ?></p>
+        <?php endif; ?>
         <button type="submit" aria-label="Sauvegarder les modifications" title="Sauvegarder les modifications" class="btn btn--primary">
           <i class="fa-regular fa-floppy-disk" aria-hidden="true"></i>
         </button>

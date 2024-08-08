@@ -9,6 +9,7 @@ class UserAcces
   private PDOStatement $statementReadOneByUsername;
   private PDOStatement $statementReadOneProfile;
   private PDOStatement $statementUpdateUsername;
+  private PDOStatement $statementUpdateEmail;
 
   public function __construct(private PDO $pdo)
   {
@@ -66,6 +67,12 @@ class UserAcces
       SET username = :username
       WHERE id = :id;
     ");
+
+    $this->statementUpdateEmail = $pdo->prepare("
+      UPDATE users
+      SET email = :email
+      WHERE id = :id;
+    ");
   }
 
   public function createUser(array $user): bool
@@ -88,7 +95,7 @@ class UserAcces
   public function getUserByUsername(string $username): User | false
   {
     $this->statementReadOneByUsername->bindValue(":username", $username);
-    $this->statementReadOneByUsername->execute();
+    return $this->statementReadOneByUsername->execute();
     $user = new User($this->statementReadOneByUsername->fetch());
     return $user ?? false;
   }
@@ -100,12 +107,39 @@ class UserAcces
     return $this->statementReadOneProfile->fetch();
   }
 
+  public function usernameExists(string $username): bool
+  {
+    $this->statementReadOneByUsername->bindValue(":username", $username);
+    $this->statementReadOneByUsername->execute();
+    if ($this->statementReadOneByUsername->fetch()) {
+      return true;
+    }
+    return false;
+  }
+
+  public function emailExists(string $email): bool
+  {
+    $this->statementReadOneByEmail->bindValue(":email", $email);
+    $this->statementReadOneByEmail->execute();
+    if ($this->statementReadOneByEmail->fetch()) {
+      return true;
+    }
+    return false;
+  }
+
   // Update methods
   public function updateUsername(int $id, string $username): bool
   {
     $this->statementUpdateUsername->bindValue(":id", $id);
     $this->statementUpdateUsername->bindValue(":username", $username);
     return $this->statementUpdateUsername->execute();
+  }
+
+  public function updateEmail(int $id, string $email): bool
+  {
+    $this->statementUpdateEmail->bindValue(":id", $id);
+    $this->statementUpdateEmail->bindValue(":email", $email);
+    return $this->statementUpdateEmail->execute();
   }
 }
 
