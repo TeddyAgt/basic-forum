@@ -8,6 +8,7 @@ class UserAcces
   private PDOStatement $statementReadOneByEmail;
   private PDOStatement $statementReadOneByUsername;
   private PDOStatement $statementReadOneProfile;
+  private PDOStatement $statementUpdateUsername;
 
   public function __construct(private PDO $pdo)
   {
@@ -58,6 +59,13 @@ class UserAcces
       FROM users
       WHERE username=:username
     ");
+
+    // Update Statements preparation
+    $this->statementUpdateUsername = $pdo->prepare("
+      UPDATE users
+      SET username = :username
+      WHERE id = :id;
+    ");
   }
 
   public function createUser(array $user): bool
@@ -85,11 +93,19 @@ class UserAcces
     return $user ?? false;
   }
 
-  public function  getUserProfile(int $id): array
+  public function getUserProfile(int $id): array
   {
     $this->statementReadOneProfile->bindValue(":id", $id);
     $this->statementReadOneProfile->execute();
     return $this->statementReadOneProfile->fetch();
+  }
+
+  // Update methods
+  public function updateUsername(int $id, string $username): bool
+  {
+    $this->statementUpdateUsername->bindValue(":id", $id);
+    $this->statementUpdateUsername->bindValue(":username", $username);
+    return $this->statementUpdateUsername->execute();
   }
 }
 

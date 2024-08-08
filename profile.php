@@ -4,10 +4,7 @@ $userAccess = require_once __DIR__ . "/database/models/db_users.php";
 $sessionAccess = require_once __DIR__ . "/database/models/db_sessions.php";
 
 $user = $sessionAccess->isLoggedIn();
-echo "<pre>";
-var_dump($user);
-echo "<pre>";
-echo "</pre>";
+
 if (!$user) {
   header("Location: /login.php");
 }
@@ -32,11 +29,11 @@ $date = new DateTimeImmutable("now", new DateTimeZone("Europe/Paris"));
 
     <section class="profile-section black-card section-1200">
       <header class="profile-section__header">
-        <h1 class="main-title"><?= (int) $date->format("h") > 8 && (int) $date->format("h") < 18 ? "Bonjour" . " " . $user["username"] : "Bonsoir" . " " . $user["username"]; ?></h1>
+        <h1 class="main-title"><?= (int) $date->format("h") > 8 && (int) $date->format("h") < 18 ? "Bonjour" . " " . $user->username : "Bonsoir" . " " . $user->username; ?></h1>
 
-        <a href="#" class="header__profile-picture">
-          <i class="profile-picture__overlay fa-solid fa-pencil" aria-hidden="true"></i>
-          <img class="profile-picture__img" src="<?= $userProfile["profile_picture"]; ?>" alt="">
+        <a href="./account-settings.php?id=<?= $user->id; ?>" class="header__profile-picture">
+          <i class="profile-picture__overlay fa-solid fa-gear" aria-hidden="true"></i>
+          <img class="profile-picture__img" src="<?= $user->profilePicture; ?>" alt="">
         </a>
       </header>
 
