@@ -10,6 +10,7 @@ class UserAcces
   private PDOStatement $statementReadOneProfile;
   private PDOStatement $statementUpdateUsername;
   private PDOStatement $statementUpdateEmail;
+  private PDOStatement $statementUpdateAvatar;
 
   public function __construct(private PDO $pdo)
   {
@@ -71,6 +72,12 @@ class UserAcces
     $this->statementUpdateEmail = $pdo->prepare("
       UPDATE users
       SET email = :email
+      WHERE id = :id;
+    ");
+
+    $this->statementUpdateAvatar = $pdo->prepare("
+      UPDATE users
+      SET avatar = :avatar
       WHERE id = :id;
     ");
   }
@@ -140,6 +147,13 @@ class UserAcces
     $this->statementUpdateEmail->bindValue(":id", $id);
     $this->statementUpdateEmail->bindValue(":email", $email);
     return $this->statementUpdateEmail->execute();
+  }
+
+  public function updateAvatar(int $id, string $avatar): bool
+  {
+    $this->statementUpdateAvatar->bindValue(":id", $id);
+    $this->statementUpdateAvatar->bindValue(":avatar", $avatar);
+    return $this->statementUpdateAvatar->execute();
   }
 }
 

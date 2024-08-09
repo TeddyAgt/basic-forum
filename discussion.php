@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // $errors["content"] = ERROR_CONTENT_TOO_SHORT;
   }
 
-  if (empty(array_filter($errors, fn ($e) => $e !== ""))) {
+  if (empty(array_filter($errors, fn($e) => $e !== ""))) {
     $discussionAccess->createOneMessage([
       "authorId" => $user["id"],
       "discussionId" => $discussionId,
@@ -97,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             <div class="message__head">
               <div class="head__profile-picture">
-                <img src="<?= $message->author["profilePicture"]; ?>" alt="">
+                <img src="<?= $message->author["avatar"]; ?>" alt="">
               </div>
 
               <a href="#" class="head__profile-username default-link <?= $message->author["role"] === "moderator" ? "moderator" : ""; ?>"><?= $message->author["username"]; ?></a>
@@ -108,7 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <div class="message__body">
 
               <?php if ($message->respondsTo) :
-                $originalMessage = [...array_filter($discussion->messages, fn ($m) => $m->id === $message->respondsTo)][0];
+                $originalMessage = [...array_filter($discussion->messages, fn($m) => $m->id === $message->respondsTo)][0];
               ?>
 
                 <div class="body__responds-to-message">

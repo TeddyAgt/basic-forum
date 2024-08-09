@@ -2,6 +2,7 @@
 require_once __DIR__ . "/database/db_access.php";
 $userAccess = require_once __DIR__ . "/database/models/db_users.php";
 $sessionAccess = require_once __DIR__ . "/database/models/db_sessions.php";
+require_once __DIR__ . "/actions/utilities.php";
 
 $user = $sessionAccess->isLoggedIn();
 
@@ -16,8 +17,10 @@ if (!$user) {
 
 // Messages d'erreur
 const ERROR_REQUIRED = "Ce champs est requis";
+const ERROR_UNKNOWN = "Une erreur est survenue, veuillez réessayer";
 const ERROR_USERNAME_TOO_SHORT = "Le nom d'utilisateur doit faire 5 caractères minimum";
 const ERROR_USERNAME_ALREADY_EXISTS = "Ce nom d'utilisateur n'est pas disponnible";
+const ERROR_AVATAR_TYPE = "Les formats autorisés pour l'avatar sont: png, jpg, jpeg.";
 const ERROR_EMAIL_INVALID = "L'adresse mail n'est pas valide";
 const ERROR_EMAIL_ALREADY_EXISTS = "Il y a déjà un compte avec cette adresse mail";
 const ERROR_PASSWORD_TOO_SHORT = "Le mot de passe doit faire 8 caractères minimum";
@@ -42,7 +45,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   switch ($method) {
       // Modification du nom d'utilisateur
     case 1:
-      echo "Modification username";
       $username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "";
 
       if (!$username) {
@@ -56,9 +58,28 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       }
 
       break;
-      // Modification de l'adresse mail
+      // Modification de l'avatar
     case 2:
-      echo "Modification email";
+      $avatar = $_FILES["avatar"] ?? "";
+
+      if (!$avatar) {
+        $errors["avatar"] = ERROR_REQUIRED;
+      } elseif (!verifyAvatarExtension($avatar["name"])) {
+        $errors["avatar"] = ERROR_AVATAR_TYPE;
+      } else {
+        // replace in folders
+        if (is_uploaded_file($avatar["tmp_name"])) {
+          $avatar["name"] = renameAvatar($user, $avatar);
+          move_uploaded_file($avatar["tmp_name"], __DIR__ . $avatar["name"]);
+          // move_uploaded_file($avatar["tmp_name"], __DIR__ . "/public/assets/images/avatars/" . $avatar["name"]);
+          $userAccess->updateAvatar($user->id, $avatar["name"]);
+        } else {
+          $errors["avatar"] = ERROR_UNKNOWN;
+        }
+      }
+      break;
+      // Modification de l'adresse mail
+    case 3:
       $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL) ?? "";
 
       if (!$email) {
@@ -70,12 +91,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       } else {
         $userAccess->updateEmail($user->id, $email);
       }
-
-      break;
-      // Modification du mot de passe
-    case 3:
-      echo "Modification password";
-      # code...
       break;
 
     default:
@@ -103,6 +118,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <section class="account-settings-section black-card section-1200">
       <h1 class="main-title">Modifier mes données</h1>
 
+      <!-- Plus tard, à passer dans un onglet "profil" -->
+      <!-- Modifier username -->
       <form action="./account-settings.php?id=<?= $user->id; ?>&method=1" method="POST" class="account-settings-form" id="change-username-form">
         <div class="input-group">
           <label for="username">Nom d'utilisateur</label>
@@ -116,7 +133,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </button>
       </form>
 
-      <form action="./account-settings.php?id=<?= $user->id; ?>&method=2" method="POST" class="account-settings-form" id="change-email-form">
+      <!-- Modifier avatar -->
+      <form action="./account-settings.php?id=<?= $user->id; ?>&method=2" method="POST" enctype="multipart/form-data" class="account-settings-form" id="change-username-form">
+        <div class="input-group">
+          <label for="avatar">Modifier l'avatar</label>
+          <input type="file" name="avatar" id="avatar">
+        </div>
+        <?php if ($errors["avatar"]) : ?>
+          <p class="form-error"><?= $errors["avatar"]; ?></p>
+        <?php endif; ?>
+        <button type="submit" aria-label="Sauvegarder les modifications" title="Sauvegarder les modifications" class="btn btn--primary">
+          <i class="fa-regular fa-floppy-disk" aria-hidden="true"></i>
+        </button>
+      </form>
+
+
+
+      <!-- Plus tard, à passer dans un onglet "compte" ou qqch comme ça: -->
+      <!-- Modifier email -->
+      <form action="./account-settings.php?id=<?= $user->id; ?>&method=3" method="POST" class="account-settings-form" id="change-email-form">
         <div class="input-group">
           <label for="email">Email</label>
           <input type="email" name="email" id="email" value="<?= $user->email; ?>">
@@ -129,6 +164,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </button>
       </form>
 
+      <!-- Modifier password -->
       <form action="./account-settings.php?id=<?= $user->id; ?>&method=3" method="POST" class="account-settings-form" id="change-password-form">
         <div class="input-group">
           <label for="password">Mot de passe</label>

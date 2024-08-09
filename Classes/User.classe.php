@@ -8,7 +8,7 @@ class User
   public string $password;
   public string $role;
   public string $signupDate;
-  public string $profilePicture;
+  public string $avatar;
 
   public function __construct(array $user)
   {
@@ -18,6 +18,6 @@ class User
     $this->password = $user["password"];
     $this->role = $user["role"];
     $this->signupDate = $user["signup_date"];
-    $this->profilePicture = $user["profile_picture"];
+    $this->avatar = $user["avatar"];
   }
 }

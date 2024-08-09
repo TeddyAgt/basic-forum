@@ -33,7 +33,7 @@ $date = new DateTimeImmutable("now", new DateTimeZone("Europe/Paris"));
 
         <a href="./account-settings.php?id=<?= $user->id; ?>" class="header__profile-picture">
           <i class="profile-picture__overlay fa-solid fa-gear" aria-hidden="true"></i>
-          <img class="profile-picture__img" src="<?= $user->profilePicture; ?>" alt="">
+          <img class="profile-picture__img" src="<?= $user->avatar; ?>" alt="">
         </a>
       </header>
 

@@ -15,7 +15,8 @@ img {
   display: block;
 }
 
-button {
+button,
+input[type="file"]::file-selector-button {
   cursor: pointer;
 }
 
@@ -84,7 +85,8 @@ main {
   padding: 16px;
 }
 
-.btn {
+.btn,
+input[type="file"]::file-selector-button {
   display: block;
   padding: 8px 16px;
   border: none;
@@ -98,7 +100,8 @@ main {
   display: inline-block;
 }
 
-.btn--primary {
+.btn--primary,
+input[type="file"]::file-selector-button {
   background: var(--blue-primary);
   color: var(--black-dark);
 }
@@ -115,7 +118,8 @@ main {
 .btn--primary:hover,
 .btn--white:hover,
 .btn--warning:hover,
-.see-latests-btn--active {
+.see-latests-btn--active,
+input[type="file"]::file-selector-button:hover {
   opacity: 0.75;
 }
 
@@ -212,7 +216,7 @@ h6 {
   font-family: var(--ff-title);
 }
 
-input:not([type="radio"]),
+input:not([type="radio"], [type="file"]),
 textarea,
 select,
 option {
@@ -361,6 +365,7 @@ label {
   justify-content: center;
   align-items: center;
   width: 32px;
+  aspect-ratio: 1 / 1;
   /* border: 1px solid var(--blue-secondary); */
   border-radius: 50%;
   overflow: hidden;

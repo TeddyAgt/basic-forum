@@ -43,7 +43,7 @@ class Message
       "id" => $message["author_id"],
       "username" => $message["username"],
       "role" => $message["role"],
-      "profilePicture" => $message["profile_picture"]
+      "avatar" => $message["avatar"]
     ];
     $this->text = $message["text"];
     $this->creationDate = $message["creation_date"];
