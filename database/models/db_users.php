@@ -13,6 +13,7 @@ class UserAcces
   private PDOStatement $statementUpdateEmail;
   private PDOStatement $statementUpdateAvatar;
   private PDOStatement $statementUpdateBannerColor;
+  private PDOStatement $statementUpdatePassword;
 
   public function __construct(private PDO $pdo)
   {
@@ -92,6 +93,12 @@ class UserAcces
       UPDATE users_settings
       SET banner_color = :color
       WHERE user_id = :userId;
+    ");
+
+    $this->statementUpdatePassword = $pdo->prepare("
+      UPDATE users
+      SET password = :password
+      WHERE id = :userId;
     ");
   }
 
@@ -177,6 +184,14 @@ class UserAcces
     $this->statementUpdateBannerColor->bindValue(":userId", $userId);
     $this->statementUpdateBannerColor->bindValue(":color", $color);
     $this->statementUpdateBannerColor->execute();
+  }
+
+  public function updatePassword(int $userId, $password)
+  {
+    $hashedPassword = password_hash($password, PASSWORD_ARGON2I);
+    $this->statementUpdatePassword->bindValue(":userId", $userId);
+    $this->statementUpdatePassword->bindValue(":password", $hashedPassword);
+    $this->statementUpdatePassword->execute();
   }
 }
 

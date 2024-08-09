@@ -25,13 +25,14 @@ const ERROR_EMAIL_INVALID = "L'adresse mail n'est pas valide";
 const ERROR_EMAIL_ALREADY_EXISTS = "Il y a déjà un compte avec cette adresse mail";
 const ERROR_PASSWORD_TOO_SHORT = "Le mot de passe doit faire 8 caractères minimum";
 const ERROR_PASSWORD_WRONG_CONFIRMATION = "Le mot de passe de confirmation ne correspond pas";
+const ERROR_PASSWORD_WRONG = "Le mot de passe est incorrect";
 
 $errors = [
   'username' => "",
   'email' => "",
-  'password' => "",
+  'newPassword' => "",
   'confirmation' => "",
-  "current" => "",
+  "currentPassword" => "",
   "about" => "",
   "avatar" => "",
   "banner-color" => ""
@@ -102,6 +103,36 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $userAccess->updateEmail($user->id, $email);
       }
       break;
+      // Modification du mot de passe
+    case 5:
+      $newPassword = $_POST["password"] ?? "";
+      $confirmation = $_POST["confirmation"] ?? "";
+      $currentPassword = $_POST["current-password"] ?? "";
+
+      if (!$newPassword) {
+        $errors["newPassword"] = ERROR_REQUIRED;
+      } elseif (mb_strlen($newPassword) < 8) {
+        $errors["newPassword"] = ERROR_PASSWORD_TOO_SHORT;
+      }
+
+      if (!$confirmation) {
+        $errors["confirmation"] = ERROR_REQUIRED;
+      } elseif ($confirmation !== $newPassword) {
+        $errors["confirmation"] = ERROR_PASSWORD_WRONG_CONFIRMATION;
+      }
+
+      if (!$currentPassword) {
+        $errors["currentPassword"] = ERROR_REQUIRED;
+      } elseif (!password_verify($currentPassword, $user->password)) {
+        $errors["currentPassword"] = ERROR_PASSWORD_WRONG;
+      }
+
+      if (empty(array_filter($errors, fn($e) => $e !== ""))) {
+        $userAccess->updatePassword($user->id, $newPassword);
+        // echo "<pre>";
+        // var_dump($user);
+        // echo "</pre>";
+      }
 
     default:
       # code...
@@ -189,7 +220,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       </form>
 
       <!-- Modifier password -->
-      <form action="./account-settings.php?id=<?= $user->id; ?>&method=3" method="POST" class="account-settings-form" id="change-password-form">
+      <form action="./account-settings.php?id=<?= $user->id; ?>&method=5" method="POST" class="account-settings-form" id="change-password-form">
         <div class="input-group">
           <label for="password">Mot de passe</label>
           <div class="password-input-box">
@@ -198,15 +229,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
               <i class="fa-regular fa-eye" aria-hidden="true"></i>
             </button>
           </div>
+          <?php if ($errors["newPassword"]) : ?>
+            <p class="form-error"><?= $errors["newPassword"]; ?></p>
+          <?php endif; ?>
         </div>
         <div class="input-group">
           <label for="confirmation">Confirmer le mot de passe</label>
           <input type="password" name="confirmation" id="confirmation">
         </div>
+        <?php if ($errors["confirmation"]) : ?>
+          <p class="form-error"><?= $errors["confirmation"]; ?></p>
+        <?php endif; ?>
         <div class="input-group">
           <label for="current-password">Mot de passe actuel</label>
           <input type="password" name="current-password" id="current-password">
         </div>
+        <?php if ($errors["currentPassword"]) : ?>
+          <p class="form-error"><?= $errors["currentPassword"]; ?></p>
+        <?php endif; ?>
 
         <button type="submit" aria-label="Sauvegarder les modifications" title="Sauvegarder les modifications" class="btn btn--primary">
           <i class="fa-regular fa-floppy-disk" aria-hidden="true"></i>

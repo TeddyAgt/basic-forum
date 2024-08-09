@@ -62,8 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       "username" => $username,
       "password" => $password
     ]);
-    echo $userId;
-    // header("Location: /login.php");
+    header("Location: /login.php");
   }
 }
 
