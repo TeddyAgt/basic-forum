@@ -21,6 +21,7 @@ const ERROR_UNKNOWN = "Une erreur est survenue, veuillez réessayer";
 const ERROR_USERNAME_TOO_SHORT = "Le nom d'utilisateur doit faire 5 caractères minimum";
 const ERROR_USERNAME_ALREADY_EXISTS = "Ce nom d'utilisateur n'est pas disponnible";
 const ERROR_AVATAR_TYPE = "Les formats autorisés pour l'avatar sont: png, jpg, jpeg.";
+const ERROR_ABOUT_TOO_LONG = "La description doit faire 250 caractères maximum";
 const ERROR_EMAIL_INVALID = "L'adresse mail n'est pas valide";
 const ERROR_EMAIL_ALREADY_EXISTS = "Il y a déjà un compte avec cette adresse mail";
 const ERROR_PASSWORD_TOO_SHORT = "Le mot de passe doit faire 8 caractères minimum";
@@ -89,8 +90,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $userAccess->updateBannerColor($user->id, $color);
       }
       break;
-      // Modification de l'adresse mail
+      // Modification de la couleur de bannière
     case 4:
+      $about = filter_input(INPUT_POST, "about", FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "";
+
+      if (mb_strlen($about) > 250) {
+        $errors["about"] = ERROR_ABOUT_TOO_LONG;
+      } else {
+        $userAccess->updateAbout($user->id, $about);
+      }
+      break;
+      // Modification de l'adresse mail
+    case 5:
       $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL) ?? "";
 
       if (!$email) {
@@ -104,7 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       }
       break;
       // Modification du mot de passe
-    case 5:
+    case 6:
       $newPassword = $_POST["password"] ?? "";
       $confirmation = $_POST["confirmation"] ?? "";
       $currentPassword = $_POST["current-password"] ?? "";
@@ -202,11 +213,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </button>
       </form>
 
-
+      <!-- Modifier à propos -->
+      <form action="./account-settings.php?id=<?= $user->id; ?>&method=4" method="POST" enctype="multipart/form-data" class="account-settings-form" id="change-username-form">
+        <div class="input-group">
+          <label for="about">À propos de moi</label>
+          <textarea name="about" id="about"><?= $user->about; ?></textarea>
+        </div>
+        <?php if ($errors["about"]) : ?>
+          <p class="form-error"><?= $errors["about"]; ?></p>
+        <?php endif; ?>
+        <button type="submit" aria-label="Sauvegarder les modifications" title="Sauvegarder les modifications" class="btn btn--primary">
+          <i class="fa-regular fa-floppy-disk" aria-hidden="true"></i>
+        </button>
+      </form>
 
       <!-- Plus tard, à passer dans un onglet "compte" ou qqch comme ça: -->
       <!-- Modifier email -->
-      <form action="./account-settings.php?id=<?= $user->id; ?>&method=4" method="POST" class="account-settings-form" id="change-email-form">
+      <form action="./account-settings.php?id=<?= $user->id; ?>&method=5" method="POST" class="account-settings-form" id="change-email-form">
         <div class="input-group">
           <label for="email">Email</label>
           <input type="email" name="email" id="email" value="<?= $user->email; ?>">
@@ -220,7 +243,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       </form>
 
       <!-- Modifier password -->
-      <form action="./account-settings.php?id=<?= $user->id; ?>&method=5" method="POST" class="account-settings-form" id="change-password-form">
+      <form action="./account-settings.php?id=<?= $user->id; ?>&method=6" method="POST" class="account-settings-form" id="change-password-form">
         <div class="input-group">
           <label for="password">Mot de passe</label>
           <div class="password-input-box">
