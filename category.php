@@ -69,7 +69,7 @@ $discussions = $discussionAccess->getDiscussionsByCategory($categoryId);
             <?php foreach ($category->discussions as $discussion) : ?>
               <li class="latests-list__item">
                 <h3 class="latests-list__teim-title">
-                  <a href="/discussion.php?<?= $discussion["id"]; ?>&page=1&limit=10">
+                  <a href="/discussion.php?id=<?= $discussion["id"]; ?>&page=1&limit=10">
                     <i class="<?= $discussion["category_icon"]; ?>" aria-hidden="true"></i><?= $discussion["title"]; ?>
                   </a>
                 </h3>

@@ -99,8 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
               <div class="head__profile-picture">
                 <img src="<?= $message->author["avatar"]; ?>" alt="">
               </div>
-
-              <a href="#" class="head__profile-username default-link <?= $message->author["role"] === "moderator" ? "moderator" : ""; ?>"><?= $message->author["username"]; ?></a>
+              <a href="#" class="head__profile-username default-link" style="color: <?= $message->author["mentions_color"]; ?>;"><?= $message->author["username"]; ?></a>
               <?= $message->author["role"] === "moderator" ? "<p>(modérateur)</p>" : ""; ?>
               <p class="head__message-date"><?= $message->creationDate; ?></p>
             </div>
@@ -113,7 +112,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                 <div class="body__responds-to-message">
                   <p class="responds-to-message__user">Réponse à
-                    <a href="/discussion.php?id=<?= $discussion->id; ?>#<?= $originalMessage->id; ?>" class="body__profile-username default-link"><?= $originalMessage->author["username"]; ?></a>:
+                    <a href="/discussion.php?id=<?= $discussion->id; ?>#<?= $originalMessage->id; ?>" class="body__profile-username default-link" style="color: <?= $originalMessage->author["mentions_color"]; ?>;"><?= $originalMessage->author["username"]; ?></a>:
                   </p>
                   <p class="body__message-text body__message-text--response <?= !$message->status ? "body-message-text--deleted" : ""; ?>">
                     <?= $originalMessage->text; ?>

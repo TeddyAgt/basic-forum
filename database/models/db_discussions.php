@@ -171,13 +171,14 @@ class DiscussionAccess
     ");
 
     $this->statementGetMessagesPageByDiscussionId = $pdo->prepare("
-      SELECT messages.*, username, role, avatar, (
+      SELECT messages.*, username, role, avatar, banner_color, mentions_color, (
         SELECT COUNT(user_id)
         FROM likes
         WHERE message_id = messages.id
       ) AS likes
       FROM messages
       INNER JOIN users ON messages.author_id = users.id
+      INNER JOIN users_settings ON users_settings.user_id = users.id
       WHERE discussion_id = :discussionId
       ORDER BY id ASC
       LIMIT :limit

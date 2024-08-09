@@ -43,7 +43,9 @@ class Message
       "id" => $message["author_id"],
       "username" => $message["username"],
       "role" => $message["role"],
-      "avatar" => $message["avatar"]
+      "avatar" => $message["avatar"],
+      "banner_color" => $message["banner_color"],
+      "mentions_color" => $message["mentions_color"],
     ];
     $this->text = $message["text"];
     $this->creationDate = $message["creation_date"];

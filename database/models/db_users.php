@@ -13,6 +13,7 @@ class UserAcces
   private PDOStatement $statementUpdateEmail;
   private PDOStatement $statementUpdateAvatar;
   private PDOStatement $statementUpdateBannerColor;
+  private PDOStatement $statementUpdateMentionsColor;
   private PDOStatement $statementUpdatePassword;
   private PDOStatement $statementUpdateAbout;
 
@@ -93,6 +94,12 @@ class UserAcces
     $this->statementUpdateBannerColor = $pdo->prepare("
       UPDATE users_settings
       SET banner_color = :color
+      WHERE user_id = :userId;
+    ");
+
+    $this->statementUpdateMentionsColor = $pdo->prepare("
+      UPDATE users_settings
+      SET mentions_color = :color
       WHERE user_id = :userId;
     ");
 
@@ -191,6 +198,13 @@ class UserAcces
     $this->statementUpdateBannerColor->bindValue(":userId", $userId);
     $this->statementUpdateBannerColor->bindValue(":color", $color);
     $this->statementUpdateBannerColor->execute();
+  }
+
+  public function updateMentionsColor(int $userId, string $color): void
+  {
+    $this->statementUpdateMentionsColor->bindValue(":userId", $userId);
+    $this->statementUpdateMentionsColor->bindValue(":color", $color);
+    $this->statementUpdateMentionsColor->execute();
   }
 
   public function updatePassword(int $userId, $password): void

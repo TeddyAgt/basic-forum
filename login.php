@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $errors["password"] = ERROR_REQUIRED;
   }
 
-  if (empty(array_filter($errors, fn ($e) => $e !== ""))) {
+  if (empty(array_filter($errors, fn($e) => $e !== ""))) {
     $user = $userAccess->getUserByEmail($email);
 
     // Vérification des credentials
@@ -68,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         <div class="input-group">
           <label for="email">Email</label>
-          <input type="email" name="email" id="email">
+          <input type="email" name="email" id="email" value="<?= $email ?? ""; ?>">
           <?php if ($errors["email"]) : ?>
             <p class="form-error"><?= $errors["email"]; ?></p>
           <?php endif; ?>

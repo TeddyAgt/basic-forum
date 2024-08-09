@@ -36,7 +36,8 @@ $errors = [
   "currentPassword" => "",
   "about" => "",
   "avatar" => "",
-  "banner-color" => ""
+  "banner-color" => "",
+  "mentions-color" => ""
 ];
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -90,8 +91,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $userAccess->updateBannerColor($user->id, $color);
       }
       break;
-      // Modification de la couleur de bannière
+      // Modification de la couleur des mentions
     case 4:
+      $color = filter_input(INPUT_POST, "mentions-color", FILTER_SANITIZE_SPECIAL_CHARS) ?? "";
+
+      if (!$color) {
+        $errors["mentions-color"] = ERROR_REQUIRED;
+      } else {
+        $userAccess->updateMentionsColor($user->id, $color);
+      }
+      break;
+      // Modification de la description
+    case 5:
       $about = filter_input(INPUT_POST, "about", FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "";
 
       if (mb_strlen($about) > 250) {
@@ -101,7 +112,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       }
       break;
       // Modification de l'adresse mail
-    case 5:
+    case 6:
       $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL) ?? "";
 
       if (!$email) {
@@ -115,7 +126,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       }
       break;
       // Modification du mot de passe
-    case 6:
+    case 7:
       $newPassword = $_POST["password"] ?? "";
       $confirmation = $_POST["confirmation"] ?? "";
       $currentPassword = $_POST["current-password"] ?? "";
@@ -202,7 +213,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       <!-- Modifier la couleur de la bannière -->
       <form action="./account-settings.php?id=<?= $user->id; ?>&method=3" method="POST" enctype="multipart/form-data" class="account-settings-form" id="change-username-form">
         <div class="input-group">
-          <label for="banner-color">Modifier l'avatar</label>
+          <label for="banner-color">Couleur de la bannière</label>
           <input type="color" name="banner-color" id="banner-color" value="<?= $user->settings["banner_color"]; ?>">
         </div>
         <?php if ($errors["banner-color"]) : ?>
@@ -213,8 +224,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </button>
       </form>
 
-      <!-- Modifier à propos -->
+      <!-- Modifier la couleur des mentions -->
       <form action="./account-settings.php?id=<?= $user->id; ?>&method=4" method="POST" enctype="multipart/form-data" class="account-settings-form" id="change-username-form">
+        <div class="input-group">
+          <label for="mentions-color">Couleur de ton nom dans les mentions</label>
+          <input type="color" name="mentions-color" id="mentions-color" value="<?= $user->settings["mentions_color"]; ?>">
+        </div>
+        <?php if ($errors["mentions-color"]) : ?>
+          <p class="form-error"><?= $errors["mentions-color"]; ?></p>
+        <?php endif; ?>
+        <button type="submit" aria-label="Sauvegarder les modifications" title="Sauvegarder les modifications" class="btn btn--primary">
+          <i class="fa-regular fa-floppy-disk" aria-hidden="true"></i>
+        </button>
+      </form>
+
+      <!-- Modifier à propos -->
+      <form action="./account-settings.php?id=<?= $user->id; ?>&method=5" method="POST" enctype="multipart/form-data" class="account-settings-form" id="change-username-form">
         <div class="input-group">
           <label for="about">À propos de moi</label>
           <textarea name="about" id="about"><?= $user->about; ?></textarea>
@@ -229,7 +254,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
       <!-- Plus tard, à passer dans un onglet "compte" ou qqch comme ça: -->
       <!-- Modifier email -->
-      <form action="./account-settings.php?id=<?= $user->id; ?>&method=5" method="POST" class="account-settings-form" id="change-email-form">
+      <form action="./account-settings.php?id=<?= $user->id; ?>&method=6" method="POST" class="account-settings-form" id="change-email-form">
         <div class="input-group">
           <label for="email">Email</label>
           <input type="email" name="email" id="email" value="<?= $user->email; ?>">
@@ -243,7 +268,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       </form>
 
       <!-- Modifier password -->
-      <form action="./account-settings.php?id=<?= $user->id; ?>&method=6" method="POST" class="account-settings-form" id="change-password-form">
+      <form action="./account-settings.php?id=<?= $user->id; ?>&method=7" method="POST" class="account-settings-form" id="change-password-form">
         <div class="input-group">
           <label for="password">Mot de passe</label>
           <div class="password-input-box">

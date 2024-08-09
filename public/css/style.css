@@ -276,12 +276,7 @@ label {
   display: flex;
 }
 
-.moderator {
-  color: var(--blue-primary);
-}
-
 /* Header */
-
 .main-header {
   background: var(--blue-primary);
   color: var(--black-dark);
