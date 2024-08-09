@@ -8,6 +8,7 @@ class SessionAccess
   private PDOStatement $statementCreateOne;
   private PDOStatement $statementReadOneSession;
   private PDOStatement $statementReadOneUser;
+  private PDOStatement $statementGetUserSettings;
   private PDOStatement $statementDeleteOne;
 
   public function __construct(private PDO $pdo)
@@ -34,6 +35,12 @@ class SessionAccess
     $this->statementDeleteOne = $pdo->prepare("
       DELETE FROM sessions
       WHERE id=:sessionId
+    ");
+
+    $this->statementGetUserSettings = $pdo->prepare("
+      SELECT *
+      FROM users_settings
+      WHERE user_id = :userId;
     ");
   }
 
@@ -66,6 +73,10 @@ class SessionAccess
           $this->statementReadOneUser->bindValue(":userId", $session["user_id"]);
           $this->statementReadOneUser->execute();
           $user = new User($this->statementReadOneUser->fetch());
+          $this->statementGetUserSettings->bindValue(":userId", $user->id);
+          $this->statementGetUserSettings->execute();
+          $settings = $this->statementGetUserSettings->fetch();
+          $user->settings = $settings;
         }
       }
     }

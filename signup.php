@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $errors["email"] = ERROR_REQUIRED;
   } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     $errors["email"] = ERROR_EMAIL_INVALID;
-  } elseif ($userAccess->getUserByEmail($email)) {
+  } elseif ($userAccess->emailExists($email)) {
     $errors["email"] = ERROR_EMAIL_ALREADY_EXISTS;
   }
 
@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $errors["username"] = ERROR_REQUIRED;
   } elseif (mb_strlen($username) < 5) {
     $errors["username"] = ERROR_USERNAME_TOO_SHORT;
-  } elseif ($userAccess->getUserByUsername($username)) {
+  } elseif ($userAccess->usernameExists($username)) {
     $errors["username"] = ERROR_USERNAME_ALREADY_EXISTS;
   }
 
@@ -57,12 +57,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
   if (empty(array_filter($errors, fn($e) => $e !== ""))) {
     // Création de l'utilisateur
-    $userAccess->createUser([
+    $userId = $userAccess->createUser([
       "email" => $email,
       "username" => $username,
       "password" => $password
     ]);
-    header("Location: /login.php");
+    echo $userId;
+    // header("Location: /login.php");
   }
 }
 

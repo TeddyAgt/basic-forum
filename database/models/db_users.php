@@ -5,18 +5,25 @@ require_once __DIR__ . "/../../Classes/User.classe.php";
 class UserAcces
 {
   private PDOStatement $statementCreateOne;
+  private PDOStatement $statementCreateUserSettings;
   private PDOStatement $statementReadOneByEmail;
   private PDOStatement $statementReadOneByUsername;
   private PDOStatement $statementReadOneProfile;
   private PDOStatement $statementUpdateUsername;
   private PDOStatement $statementUpdateEmail;
   private PDOStatement $statementUpdateAvatar;
+  private PDOStatement $statementUpdateBannerColor;
 
   public function __construct(private PDO $pdo)
   {
     $this->statementCreateOne = $pdo->prepare("
       INSERT INTO users (email, username, password)
       VALUES (:email, :username, :password)
+    ");
+
+    $this->statementCreateUserSettings = $pdo->prepare("
+      INSERT INTO users_settings (user_id)
+      VALUES (:userId);
     ");
 
     $this->statementReadOneByEmail = $pdo->prepare("
@@ -80,15 +87,24 @@ class UserAcces
       SET avatar = :avatar
       WHERE id = :id;
     ");
+
+    $this->statementUpdateBannerColor = $pdo->prepare("
+      UPDATE users_settings
+      SET banner_color = :color
+      WHERE user_id = :userId;
+    ");
   }
 
-  public function createUser(array $user): bool
+  public function createUser(array $user)
   {
     $hashedPassword = password_hash($user["password"], PASSWORD_ARGON2I);
     $this->statementCreateOne->bindValue(":email", $user["email"]);
     $this->statementCreateOne->bindValue(":username", $user["username"]);
     $this->statementCreateOne->bindValue(":password", $hashedPassword);
-    return $this->statementCreateOne->execute();
+    $this->statementCreateOne->execute();
+    $userId = $this->pdo->lastInsertId();
+    $this->statementCreateUserSettings->bindValue(":userId", $userId);
+    $this->statementCreateUserSettings->execute();
   }
 
   public function getUserByEmail(string $email): User | false
@@ -154,6 +170,13 @@ class UserAcces
     $this->statementUpdateAvatar->bindValue(":id", $id);
     $this->statementUpdateAvatar->bindValue(":avatar", $avatar);
     return $this->statementUpdateAvatar->execute();
+  }
+
+  public function updateBannerColor(int $userId, string $color): void
+  {
+    $this->statementUpdateBannerColor->bindValue(":userId", $userId);
+    $this->statementUpdateBannerColor->bindValue(":color", $color);
+    $this->statementUpdateBannerColor->execute();
   }
 }
 

@@ -28,7 +28,7 @@ $date = new DateTimeImmutable("now", new DateTimeZone("Europe/Paris"));
   <main class="center">
 
     <section class="profile-section black-card section-1200">
-      <header class="profile-section__header">
+      <header class="profile-section__header" style="background-color: <?= $user->settings["banner_color"]; ?>;">
         <h1 class="main-title"><?= (int) $date->format("h") > 8 && (int) $date->format("h") < 18 ? "Bonjour" . " " . $user->username : "Bonsoir" . " " . $user->username; ?></h1>
 
         <a href="./account-settings.php?id=<?= $user->id; ?>" class="header__profile-picture">

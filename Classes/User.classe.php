@@ -9,6 +9,7 @@ class User
   public string $role;
   public string $signupDate;
   public string $avatar;
+  public array $settings;
 
   public function __construct(array $user)
   {
@@ -19,5 +20,8 @@ class User
     $this->role = $user["role"];
     $this->signupDate = $user["signup_date"];
     $this->avatar = $user["avatar"];
+    // $this->settings = [
+    // "banner_color" => $user[""]
+    // ]
   }
 }

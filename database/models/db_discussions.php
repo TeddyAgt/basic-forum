@@ -159,7 +159,7 @@ class DiscussionAccess
     ");
 
     $this->statementGetMessagesByDiscussionId = $pdo->prepare("
-      SELECT messages.*, username, role, profile_picture, (
+      SELECT messages.*, username, role, avatar, (
         SELECT COUNT(user_id)
         FROM likes
         WHERE message_id = messages.id
@@ -171,7 +171,7 @@ class DiscussionAccess
     ");
 
     $this->statementGetMessagesPageByDiscussionId = $pdo->prepare("
-      SELECT messages.*, username, role, profile_picture, (
+      SELECT messages.*, username, role, avatar, (
         SELECT COUNT(user_id)
         FROM likes
         WHERE message_id = messages.id

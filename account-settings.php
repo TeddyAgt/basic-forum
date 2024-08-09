@@ -33,7 +33,8 @@ $errors = [
   'confirmation' => "",
   "current" => "",
   "about" => "",
-  "avatar" => ""
+  "avatar" => "",
+  "banner-color" => ""
 ];
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -71,15 +72,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if (is_uploaded_file($avatar["tmp_name"])) {
           $avatar["name"] = renameAvatar($user, $avatar);
           move_uploaded_file($avatar["tmp_name"], __DIR__ . $avatar["name"]);
-          // move_uploaded_file($avatar["tmp_name"], __DIR__ . "/public/assets/images/avatars/" . $avatar["name"]);
           $userAccess->updateAvatar($user->id, $avatar["name"]);
         } else {
           $errors["avatar"] = ERROR_UNKNOWN;
         }
       }
       break;
-      // Modification de l'adresse mail
+      // Modification de la couleur de bannière
     case 3:
+      $color = filter_input(INPUT_POST, "banner-color", FILTER_SANITIZE_SPECIAL_CHARS) ?? "";
+
+      if (!$color) {
+        $errors["banner-color"] = ERROR_REQUIRED;
+      } else {
+        $userAccess->updateBannerColor($user->id, $color);
+      }
+      break;
+      // Modification de l'adresse mail
+    case 4:
       $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL) ?? "";
 
       if (!$email) {
@@ -147,11 +157,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </button>
       </form>
 
+      <!-- Modifier la couleur de la bannière -->
+      <form action="./account-settings.php?id=<?= $user->id; ?>&method=3" method="POST" enctype="multipart/form-data" class="account-settings-form" id="change-username-form">
+        <div class="input-group">
+          <label for="banner-color">Modifier l'avatar</label>
+          <input type="color" name="banner-color" id="banner-color" value="<?= $user->settings["banner_color"]; ?>">
+        </div>
+        <?php if ($errors["banner-color"]) : ?>
+          <p class="form-error"><?= $errors["banner-color"]; ?></p>
+        <?php endif; ?>
+        <button type="submit" aria-label="Sauvegarder les modifications" title="Sauvegarder les modifications" class="btn btn--primary">
+          <i class="fa-regular fa-floppy-disk" aria-hidden="true"></i>
+        </button>
+      </form>
+
 
 
       <!-- Plus tard, à passer dans un onglet "compte" ou qqch comme ça: -->
       <!-- Modifier email -->
-      <form action="./account-settings.php?id=<?= $user->id; ?>&method=3" method="POST" class="account-settings-form" id="change-email-form">
+      <form action="./account-settings.php?id=<?= $user->id; ?>&method=4" method="POST" class="account-settings-form" id="change-email-form">
         <div class="input-group">
           <label for="email">Email</label>
           <input type="email" name="email" id="email" value="<?= $user->email; ?>">
