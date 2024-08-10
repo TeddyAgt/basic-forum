@@ -19,7 +19,7 @@ $date = new DateTimeImmutable("now", new DateTimeZone("Europe/Paris"));
 <head> <!-- ᓚᘏᗢ -->
   <?php require_once "./includes/head.php"; ?>
   <link rel="stylesheet" href="./public/css/profile.css">
-  <title>Forum - Profil</title>
+  <title><?= $user->username; ?> - Forum</title>
 </head>
 
 <body>
@@ -31,7 +31,7 @@ $date = new DateTimeImmutable("now", new DateTimeZone("Europe/Paris"));
       <header class="profile-section__header" style="background-color: <?= $user->settings["banner_color"]; ?>;">
         <h1 class="main-title"><?= (int) $date->format("h") > 8 && (int) $date->format("h") < 18 ? "Bonjour" . " " . $user->username : "Bonsoir" . " " . $user->username; ?></h1>
 
-        <a href="./account-settings.php?id=<?= $user->id; ?>" class="header__profile-picture">
+        <a href="./user-settings.php?id=<?= $user->id; ?>" class="header__profile-picture">
           <i class="profile-picture__overlay fa-solid fa-gear" aria-hidden="true"></i>
           <img class="profile-picture__img" src="<?= $user->avatar; ?>" alt="">
         </a>

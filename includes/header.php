@@ -14,7 +14,11 @@ $user = $sessionAccess->isLoggedIn();
     </form>
   </div>
 
-  <nav class="main-navigation">
+  <button class="mobile-navigation-toggler" aria-label="Ouvrir le menu de navigation" aria-controls="main-navigation" aria-expanded="false">
+    <i class="fa-solid fa-bars mobile-navigation__icon" aria-hidden="true"></i>
+  </button>
+
+  <nav class="main-navigation" id="main-navigation">
 
     <a href="/" class="main-navigation__link <?= $_SERVER["REQUEST_URI"] === "/" || $_SERVER["REQUEST_URI"] === "/index.php" ? "main-navigation__link--active" : ""; ?>" title="Accueil">Accueil</a>
 

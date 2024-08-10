@@ -1,0 +1,97 @@
+.account-settings-section {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+}
+
+.account-settings__aside {
+  padding-right: 16px;
+}
+
+.account-settings__navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.aside-navigation-link {
+  position: relative;
+  display: block;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-family: var(--ff-title);
+  color: var(--white);
+  text-align: left;
+  z-index: 100;
+  background: none;
+  border: none;
+}
+
+.aside-navigation-link::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  border-radius: 4px;
+  background: var(--black-lighter);
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+}
+
+.aside-navigation-link:hover::after {
+  opacity: 0.5;
+}
+
+.aside-navigation-link.aside-navigation-link--active::after {
+  opacity: 1;
+}
+
+.account-settings-article {
+  padding-left: 16px;
+  display: none;
+}
+
+.account-settings-article--active {
+  display: block;
+}
+
+.input-flex-container {
+  display: flex;
+  gap: 16px;
+}
+
+.input-flex-container--up {
+  align-items: flex-start;
+}
+
+.account-settings-article
+  :is(
+    input:is([type="text"], [type="password"]:not(#password), [type="email"]),
+    textarea,
+    .password-input-box
+  ) {
+  width: 45%;
+}
+
+textarea {
+  height: 220px;
+  resize: none;
+}
+
+input[type="color"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background: transparent;
+  /* box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.4); */
+}
+
+input[type="color"]::-webkit-color-swatch,
+input[type="color"]::-moz-color-swatch {
+  border: none;
+}
