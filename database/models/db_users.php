@@ -1,8 +1,8 @@
 <?php
 
 require_once __DIR__ . "/../../Classes/User.classe.php";
-
-class UserAcces
+$followUpsAccess = require_once __DIR__ . "/db_follow_ups.php";
+class UserAccess
 {
   private PDOStatement $statementCreateOne;
   private PDOStatement $statementCreateUserSettings;
@@ -62,7 +62,7 @@ class UserAcces
         FROM follow_ups
         WHERE followee = users.id
       ) AS nbr_of_followers,
-      users_settings.*
+      banner_color, banner_img, mentions_color
       FROM users
       JOIN users_settings ON users.id = users_settings.user_id
       WHERE users.id = :id
@@ -225,4 +225,4 @@ class UserAcces
   }
 }
 
-return new UserAcces($pdo);
+return new UserAccess($pdo);

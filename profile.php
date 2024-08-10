@@ -13,17 +13,13 @@ if (!$user) {
 if ($profileUserId && $user->id !== $profileUserId) {
   $userProfile = $userAccess->getUserProfile($profileUserId);
   $visitor = true;
+  $isFollowing = $followUpsAccess->isFollowing($user->id, $profileUserId);
+  var_dump($isFollowing);
 } else {
   $userProfile = $userAccess->getUserProfile($user->id);
   $visitor = false;
 }
 
-
-
-$date = new DateTimeImmutable("now", new DateTimeZone("Europe/Paris"));
-// echo "<pre>";
-// var_dump($userProfile);
-// echo "</pre>";
 ?>
 
 <!DOCTYPE html>
@@ -42,6 +38,13 @@ $date = new DateTimeImmutable("now", new DateTimeZone("Europe/Paris"));
 
     <section class="profile-section black-card section-1200">
       <header class="profile-section__header" style="background-color: <?= $userProfile["banner_color"]; ?>;">
+        <?php if ($visitor): ?>
+          <?php if ($isFollowing): ?>
+            <button class="btn btn--follow btn--follow-true" data-following="true" data-followee-id="<?= $userProfile["id"] ?>">Suivi</button>
+          <?php else: ?>
+            <button class="btn btn--follow btn--follow-false" data-following="false" data-followee-id="<?= $userProfile["id"] ?>">Suivre</button>
+          <?php endif; ?>
+        <?php endif; ?>
         <h1 class="main-title"><?= $userProfile["username"]; ?></h1>
 
         <?php if ($visitor): ?>

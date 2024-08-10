@@ -2,11 +2,19 @@
 latestsLists = document.querySelectorAll(".latests-list");
 const seeLatestsBtns = document.querySelectorAll(".see-latests-btn");
 const seeLatestsArticles = document.querySelectorAll(".latests-article");
+const followBtn = document.querySelector(".btn--follow") ?? "";
+
+// Constantes globales
 const userId = new URLSearchParams(window.location.search).get("id") ?? "";
+
 // Event Listeners
 seeLatestsBtns.forEach((btn) =>
   btn.addEventListener("click", (e) => toggleLatests(e))
 );
+
+if (followBtn) {
+  followBtn.addEventListener("click", handleClickFollowBtn);
+}
 
 // Fonctions ******************************
 async function fetchActivities() {
@@ -78,4 +86,17 @@ function toggleLatests(e) {
     seeLatestsArticles[1].classList.add("active");
     seeLatestsBtns[1].classList.add("see-latests-btn--active");
   }
+}
+
+async function handleClickFollowBtn(e) {
+  const response = await fetch("./actions/handle-followup.php", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({
+      isFollowing: e.target.dataset.following,
+      followeeId: e.target.dataset.followeeId,
+    }),
+  });
 }

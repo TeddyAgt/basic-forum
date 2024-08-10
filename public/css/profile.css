@@ -11,6 +11,12 @@
   padding: 16px;
 }
 
+.btn--follow {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
 .header__profile-picture {
   position: absolute;
   display: block;
