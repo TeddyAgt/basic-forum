@@ -61,8 +61,10 @@ class UserAcces
         SELECT COUNT(followee)
         FROM follow_ups
         WHERE followee = users.id
-      ) AS nbr_of_followers
+      ) AS nbr_of_followers,
+      users_settings.*
       FROM users
+      JOIN users_settings ON users.id = users_settings.user_id
       WHERE users.id = :id
     ");
 

@@ -2,7 +2,7 @@
 latestsLists = document.querySelectorAll(".latests-list");
 const seeLatestsBtns = document.querySelectorAll(".see-latests-btn");
 const seeLatestsArticles = document.querySelectorAll(".latests-article");
-
+const userId = new URLSearchParams(window.location.search).get("id") ?? "";
 // Event Listeners
 seeLatestsBtns.forEach((btn) =>
   btn.addEventListener("click", (e) => toggleLatests(e))
@@ -10,7 +10,7 @@ seeLatestsBtns.forEach((btn) =>
 
 // Fonctions ******************************
 async function fetchActivities() {
-  const response = await fetch("./get-activities.php");
+  const response = await fetch(`./get-activities.php?id=${userId}`);
 
   if (response.ok) {
     const activities = await response.json();
