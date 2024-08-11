@@ -2,7 +2,7 @@
 
 require_once __DIR__ . "/../../Classes/Category.classe.php";
 require_once __DIR__ . "/../../Classes/Discussion.classe.php";
-
+$likesAccess = require_once __DIR__ . "/db_likes.php";
 class DiscussionAccess
 {
 

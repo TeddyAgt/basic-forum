@@ -99,4 +99,14 @@ async function handleClickFollowBtn(e) {
       followeeId: e.target.dataset.followeeId,
     }),
   });
+
+  if (response.ok) {
+    if (e.target.dataset.following === "true") {
+      e.target.textContent = "Suivre";
+      e.target.dataset.following = "false";
+    } else {
+      e.target.textContent = "Suivi";
+      e.target.dataset.following = "true";
+    }
+  }
 }

@@ -14,7 +14,6 @@ if ($profileUserId && $user->id !== $profileUserId) {
   $userProfile = $userAccess->getUserProfile($profileUserId);
   $visitor = true;
   $isFollowing = $followUpsAccess->isFollowing($user->id, $profileUserId);
-  var_dump($isFollowing);
 } else {
   $userProfile = $userAccess->getUserProfile($user->id);
   $visitor = false;

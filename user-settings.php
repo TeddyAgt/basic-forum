@@ -27,6 +27,7 @@ const ERROR_EMAIL_ALREADY_EXISTS = "Il y a déjà un compte avec cette adresse m
 const ERROR_PASSWORD_TOO_SHORT = "Le mot de passe doit faire 8 caractères minimum";
 const ERROR_PASSWORD_WRONG_CONFIRMATION = "Le mot de passe de confirmation ne correspond pas";
 const ERROR_PASSWORD_WRONG = "Le mot de passe est incorrect";
+const ERROR_CONFIRM_DELETE_ACCOUNT = "Vous devez cocher la case pour confirmer la suppression de votre compte";
 
 $errors = [
   'username' => "",
@@ -37,7 +38,9 @@ $errors = [
   "about" => "",
   "avatar" => "",
   "banner-color" => "",
-  "mentions-color" => ""
+  "mentions-color" => "",
+  "delete-account-password" => "",
+  "confirm-delete-account" => ""
 ];
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -145,15 +148,32 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
       if (!$currentPassword) {
         $errors["currentPassword"] = ERROR_REQUIRED;
-      } elseif (!password_verify($currentPassword, $user->password)) {
+      } elseif (!password_verify($currentPassword, $user->get_password())) {
         $errors["currentPassword"] = ERROR_PASSWORD_WRONG;
       }
 
       if (empty(array_filter($errors, fn($e) => $e !== ""))) {
         $userAccess->updatePassword($user->id, $newPassword);
-        // echo "<pre>";
-        // var_dump($user);
-        // echo "</pre>";
+      }
+      // Suppression de compte
+    case 8:
+      $password = $_POST["delete-account-password"] ?? "";
+      $confirmation = $_POST["confirm-delete-account"] ?? "";
+
+      if (!$password) {
+        $errors["delete-account-password"] = ERROR_REQUIRED;
+      } elseif (!password_verify($password, $user->get_password())) {
+        $errors["delete-account-password"] = ERROR_PASSWORD_WRONG;
+      }
+
+      if (!$confirmation) {
+        $errors["confirm-delete-account"] = ERROR_CONFIRM_DELETE_ACCOUNT;
+      }
+      var_dump($errors);
+
+      if (empty(array_filter($errors, fn($e) => $e !== ""))) {
+        $userAccess->deleteAccount($user->id);
+        header("Location: /");
       }
 
     default:
@@ -184,10 +204,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       <!-- navigation des paramètres -->
       <aside class="account-settings__aside">
         <h2 class="section-title">Paramètres utilisateur</h2>
-
         <nav class="account-settings__navigation">
           <button class="aside-navigation-link aside-navigation-link--active" type="button" aria-controls="profile-settings" aria-expanded="true">Profil</button>
           <button class="aside-navigation-link" type="button" aria-controls="account-settings" aria-expanded="false">Compte</button>
+        </nav>
+
+        <h2 class="section-title">Paramètres du forum</h2>
+        <nav class="account-settings__navigation">
+          <button class="aside-navigation-link" type="button" aria-controls="account-PLACEHOLDER" aria-expanded="false">Apparence</button>
+        </nav>
+
+        <h2 class="section-title">Zone rouge</h2>
+        <nav class="account-settings__navigation">
+          <button class="aside-navigation-link" type="button" aria-controls="account-PLACEHOLDER" aria-expanded="false">Supprimer mon compte</button>
         </nav>
 
       </aside>
@@ -195,6 +224,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       <div class="account-settings-section__container">
 
         <!-- <h1 class="main-title">Modifier mes données</h1> -->
+        <!-- Paramètres du profil -->
         <article class="account-settings-article account-settings-article--profile account-settings-article--active" id="profile-settings" aria-hidden="false">
 
           <h2 class="section-title">Profil</h2>
@@ -267,7 +297,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           <form action="./user-settings.php?id=<?= $user->id; ?>&method=5" method="POST" enctype="multipart/form-data" class="account-settings-form" id="change-username-form">
             <div class="input-group">
               <label for="about">À propos de moi</label>
-              <textarea name="about" id="about"><?= $user->about; ?></textarea>
+              <div class="textarea-container">
+                <textarea name="about" id="about" maxlength="250"><?= $user->about; ?></textarea>
+                <div class="textarea-counter"></div>
+              </div>
             </div>
             <?php if ($errors["about"]) : ?>
               <p class="form-error"><?= $errors["about"]; ?></p>
@@ -279,6 +312,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         </article>
 
+        <!-- Paramètres du compte -->
         <article class="account-settings-article account-settings-article--account" id="profile-settings" aria-hidden="true">
 
           <h2 class="section-title">Compte</h2>
@@ -332,6 +366,52 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <?php if ($errors["currentPassword"]) : ?>
               <p class="form-error"><?= $errors["currentPassword"]; ?></p>
             <?php endif; ?>
+          </form>
+
+        </article>
+
+        <!-- Apparence du forum -->
+        <article class="account-settings-article account-settings-article--appearance">
+          <h2 class="section-title">Apparence</h2>
+        </article>
+
+        <!-- Suppression de compte -->
+        <article class="account-settings-article account-settings-article--delete-account">
+          <h2 class="section-title">Supprimer mon compte</h2>
+
+          <!-- On va gérer la soumission de ce form en JS -->
+          <form action="./user-settings.php?id=<?= $user->id; ?>&method=8" method="POST" class="account-settings-form" id="change-password-form">
+
+            <button type="button" class="btn btn--danger" id="delete-account-btn">Supprimer mon compte</button>
+
+            <div class="delete-account-container">
+
+              <div class="input-group">
+                <label for="delete-account-password">Entrez votre mot de passe pour confirmer la suppression de votre compte</label>
+                <div class="password-input-box">
+                  <input type="password" name="delete-account-password" id="delete-account-password">
+                  <button type="button" id="show-password" aria-label="Afficher le mot de passe" title="Afficher le mot de passe">
+                    <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                  </button>
+                </div>
+                <?php if ($errors["delete-account-password"]) : ?>
+                  <p class="form-error"><?= $errors["delete-account-password"]; ?></p>
+                <?php endif; ?>
+              </div>
+
+              <label for="confirm-delete-account" class="checkbox-label">
+                <input type="checkbox" name="confirm-delete-account" id="confirm-delete-account"><span>J'ai compris que la suppression de mon compte est définitive.</span>
+              </label>
+              <?php if ($errors["confirm-delete-account"]) : ?>
+                <p class="form-error"><?= $errors["confirm-delete-account"]; ?></p>
+              <?php endif; ?>
+
+              <button type="submit" aria-label="Sauvegarder les modifications" title="Sauvegarder les modifications" class="btn btn--primary">
+                <i class="fa-regular fa-floppy-disk" aria-hidden="true"></i>
+              </button>
+
+            </div>
+
           </form>
 
         </article>

@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Vérification des credentials
     if (!$user) {
       $errors["email"] = ERROR_EMAIL_UNKNOWN;
-    } elseif (!password_verify($password, $user->password)) {
+    } elseif (!password_verify($password, $user->get_password())) {
       $errors["password"] = ERROR_PASSWORD_WRONG;
     } else {
       // Création de la session

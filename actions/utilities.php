@@ -30,6 +30,7 @@ function replaceSpecialChars(string $string): string
     '/[úùûü]/u' => 'u',
     '/[ÚÙÛÜ]/u' => 'U',
     '/ç/' => 'c',
+    '/\s/' => "_",
     '/Ç/' => 'C',
     '/ñ/' => 'n',
     '/Ñ/' => 'N',

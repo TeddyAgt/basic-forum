@@ -218,7 +218,7 @@ h6 {
   font-family: var(--ff-title);
 }
 
-input:not([type="radio"], [type="file"], [type="color"]),
+input:not([type="radio"], [type="file"], [type="color"], [type="checkbox"]),
 textarea,
 select,
 option {

@@ -3,10 +3,22 @@ const navLinks = [...document.querySelectorAll(".aside-navigation-link")];
 const settingsContainers = [
   ...document.querySelectorAll(".account-settings-article"),
 ];
+const aboutTextarea = document.querySelector("#about");
+const textareaCounter = document.querySelector(".textarea-counter");
+textareaCounter.textContent = `${250 - aboutTextarea.value.length} restants`;
+const deleteAccountBtn = document.querySelector("#delete-account-btn");
+const deleteAccountContainer = document.querySelector(
+  ".delete-account-container"
+);
+
+// Constantes et variables globales
 
 // Écouteurs d'événements
 navLinks.forEach((link) => link.addEventListener("click", handleClickLink));
+aboutTextarea.addEventListener("input", handleInputTextarea);
+deleteAccountBtn.addEventListener("click", handleClickDeleteBtn);
 
+// Fonctions
 function handleClickLink(e) {
   const targetLink = e.target;
   const targetContainer = settingsContainers[navLinks.indexOf(targetLink)];
@@ -23,4 +35,12 @@ function handleClickLink(e) {
   });
   targetContainer.classList.add("account-settings-article--active");
   targetContainer.ariaHidden = "false";
+}
+
+function handleInputTextarea() {
+  textareaCounter.textContent = `${250 - aboutTextarea.value.length} restants`;
+}
+
+function handleClickDeleteBtn() {
+  deleteAccountContainer.classList.add("delete-account-container--active");
 }

@@ -2,6 +2,7 @@
 
 require_once __DIR__ . "/../../Classes/User.classe.php";
 $followUpsAccess = require_once __DIR__ . "/db_follow_ups.php";
+
 class UserAccess
 {
   private PDOStatement $statementCreateOne;
@@ -16,6 +17,13 @@ class UserAccess
   private PDOStatement $statementUpdateMentionsColor;
   private PDOStatement $statementUpdatePassword;
   private PDOStatement $statementUpdateAbout;
+  private PDOStatement $statementDeleteLikesByUser;
+  private PDOStatement $statementDeleteFollowUpsWithUser;
+  private PDOStatement $statementUpdateMessagesWithDeletedUser;
+  private PDOStatement $statementUpdateDiscussionsWithDeletedUser;
+  private PDOStatement $statementDeleteUserSettings;
+  private PDOStatement $statementDeleteUserSessions;
+  private PDOStatement $statementDeleteUser;
 
   public function __construct(private PDO $pdo)
   {
@@ -114,6 +122,43 @@ class UserAccess
     $this->statementUpdateAbout = $pdo->prepare("
       UPDATE users
       SET about = :about
+      WHERE id = :userId;
+    ");
+
+    $this->statementDeleteLikesByUser = $pdo->prepare("
+      DELETE FROM likes
+      WHERE user_id = :userId;
+    ");
+
+    $this->statementDeleteFollowUpsWithUser = $pdo->prepare("
+      DELETE FROM follow_ups
+      WHERE follower = :userId OR followee = :userId;
+    ");
+
+    $this->statementUpdateMessagesWithDeletedUser = $pdo->prepare("
+      UPDATE messages
+      SET author_id = 17, modification_date = NOW()
+      WHERE author_id = :userId;
+    ");
+
+    $this->statementUpdateDiscussionsWithDeletedUser = $pdo->prepare("
+      UPDATE discussions
+      SET author_id = 17
+      WHERE author_id = :userId;
+    ");
+
+    $this->statementDeleteUserSettings = $pdo->prepare("
+      DELETE FROM users_settings
+      WHERE user_id = :userId;
+    ");
+
+    $this->statementDeleteUserSessions = $pdo->prepare("
+      DELETE FROM sessions
+      WHERE user_id = :userId;
+    ");
+
+    $this->statementDeleteUser = $pdo->prepare("
+      DELETE FROM users
       WHERE id = :userId;
     ");
   }
@@ -222,6 +267,24 @@ class UserAccess
     $this->statementUpdateAbout->bindValue("userId", $userId);
     $this->statementUpdateAbout->bindValue("about", $about);
     $this->statementUpdateAbout->execute();
+  }
+
+  public function deleteAccount(int $userId): void
+  {
+    $this->statementDeleteLikesByUser->bindValue(":userId", $userId);
+    $this->statementDeleteLikesByUser->execute();
+    $this->statementDeleteFollowUpsWithUser->bindValue(":userId", $userId);
+    $this->statementDeleteFollowUpsWithUser->execute();
+    $this->statementUpdateMessagesWithDeletedUser->bindValue(":userId", $userId);
+    $this->statementUpdateMessagesWithDeletedUser->execute();
+    $this->statementUpdateDiscussionsWithDeletedUser->bindValue(":userId", $userId);
+    $this->statementUpdateDiscussionsWithDeletedUser->execute();
+    $this->statementDeleteUserSettings->bindValue(":userId", $userId);
+    $this->statementDeleteUserSettings->execute();
+    $this->statementDeleteUserSessions->bindValue(":userId", $userId);
+    $this->statementDeleteUserSessions->execute();
+    $this->statementDeleteUser->bindValue(":userId", $userId);
+    $this->statementDeleteUser->execute();
   }
 }
 
