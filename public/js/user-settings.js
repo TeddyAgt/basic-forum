@@ -10,15 +10,23 @@ const deleteAccountBtn = document.querySelector("#delete-account-btn");
 const deleteAccountContainer = document.querySelector(
   ".delete-account-container"
 );
+const mobileSettingsMenuToggler = document.querySelector(
+  ".mobile-settings-menu-toggler"
+);
+const settingsMenu = document.querySelector(".account-settings__aside");
 
 // Constantes et variables globales
 let sec = new URLSearchParams(window.location.search).get("sec");
 displayUI(navLinks[sec], settingsContainers[sec]);
+let isSettingsMenuVisible = false;
 
 // Écouteurs d'événements
 navLinks.forEach((link) => link.addEventListener("click", handleClickLink));
 aboutTextarea.addEventListener("input", handleInputTextarea);
 deleteAccountBtn.addEventListener("click", handleClickDeleteBtn);
+mobileSettingsMenuToggler.addEventListener("click", () => {
+  toggleSettingsMenu();
+});
 
 // Fonctions
 function handleClickLink(e) {
@@ -37,6 +45,7 @@ function handleClickLink(e) {
   });
   targetContainer.classList.add("account-settings-article--active");
   targetContainer.ariaHidden = "false";
+  toggleSettingsMenu();
 }
 
 function displayUI(targetLink, targetContainer) {
@@ -61,4 +70,19 @@ function handleInputTextarea() {
 
 function handleClickDeleteBtn() {
   deleteAccountContainer.classList.add("delete-account-container--active");
+}
+
+function toggleSettingsMenu() {
+  if (!isSettingsMenuVisible) {
+    settingsMenu.classList.add("account-settings__aside--active");
+    mobileSettingsMenuToggler.ariaLabel =
+      "Fermer le menu de catégorie des paramètres";
+    mobileSettingsMenuToggler.ariaExpanded = "true";
+  } else {
+    settingsMenu.classList.remove("account-settings__aside--active");
+    mobileSettingsMenuToggler.ariaLabel =
+      "Ouvrir le menu de catégorie des paramètres";
+    mobileSettingsMenuToggler.ariaExpanded = "false";
+  }
+  isSettingsMenuVisible = !isSettingsMenuVisible;
 }

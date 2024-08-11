@@ -9,6 +9,7 @@ class DiscussionAccess
   // Categories PDO Statements
   private PDOStatement $statementGetAllCategories;
   private PDOStatement $statementGetCategoryById;
+  private PDOStatement $statementGetTopCategories;
 
   // Discussions PDO Statements
   private PDOStatement $statementCreateOneDiscussion;
@@ -49,6 +50,17 @@ class DiscussionAccess
       WHERE id = :id
     ");
 
+    $this->statementGetTopCategories = $pdo->prepare("
+      SELECT *, (
+        SELECT COUNT(discussions.id)
+        FROM discussions
+        WHERE category_id = categories.id
+      ) AS nb_discussions
+      FROM categories
+      ORDER BY nb_discussions DESC
+      LIMIT 5;
+    ");
+
     // Discussions Statements Preparation
     $this->statementCreateOneDiscussion = $pdo->prepare("
       INSERT INTO discussions (title, author_id, category_id)
@@ -83,10 +95,16 @@ class DiscussionAccess
           LIMIT 1
         ) AS latest_response,
         users.username,
-        users.id AS user_id
+        users.id AS user_id,
+        (
+          SELECT mentions_color
+          FROM users_settings
+          WHERE discussions.author_id = users_settings.user_id
+        ) AS user_color
         FROM discussions
         INNER JOIN categories ON discussions.category_id = categories.id
         INNER JOIN users ON discussions.author_id = users.id
+        INNER JOIN users_settings ON users_settings.user_id = discussions.author_id
         GROUP BY discussions.id
         ORDER BY creation_date DESC
         LIMIT :N;
@@ -209,7 +227,12 @@ class DiscussionAccess
           WHERE m1.discussion_id = m2.discussion_id
         ) AS nb_responses,
         users.username,
-        users.id AS user_id
+        users.id AS user_id,
+        (
+          SELECT mentions_color
+          FROM users_settings
+          WHERE discussions.author_id = users_settings.user_id
+        ) AS user_color
         FROM messages AS m1
         INNER JOIN discussions ON m1.discussion_id = discussions.id
         INNER JOIN categories ON discussions.category_id = categories.id
@@ -277,6 +300,12 @@ class DiscussionAccess
     $category = new Category($this->statementGetCategoryById->fetch());
     $category->setDiscussions($this->getDiscussionsByCategory($id, $limit, $page));
     return $category;
+  }
+
+  public function getTopCategories(): array
+  {
+    $this->statementGetTopCategories->execute();
+    return $this->statementGetTopCategories->fetchAll();
   }
 
   // Discussions CRUD Methods

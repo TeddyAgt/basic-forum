@@ -17,11 +17,15 @@
   right: 16px;
 }
 
+.main-title {
+  font-size: clamp(20px, 3.3vw, 40px);
+}
+
 .header__profile-picture {
   position: absolute;
   display: block;
   width: 128px;
-  height: 128px;
+  aspect-ratio: 1 / 1;
   top: 100%;
   left: 50%;
   transform: translate(-50%, -60%);
@@ -65,4 +69,23 @@
   padding-top: 48px;
   display: grid;
   grid-template-columns: 1fr 2fr;
+}
+
+@media screen and (max-width: 850px) {
+  .header__profile-picture {
+    width: 100px;
+    top: 90%;
+  }
+
+  .profile-section__content {
+    padding: 16px;
+    padding-top: 48px;
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .profile-section__sidebar {
+    order: 2;
+    margin-top: 32px;
+  }
 }

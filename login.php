@@ -82,7 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
               <i class="fa-regular fa-eye" aria-hidden="true"></i>
             </button>
           </div>
-          <a href="#" class="form-link">Mot de passe oublié</a>
+          <p class="form-link"><a href="#">Mot de passe oublié</a></p>
           <?php if ($errors["password"]) : ?>
             <p class="form-error"><?= $errors["password"]; ?></p>
           <?php endif; ?>

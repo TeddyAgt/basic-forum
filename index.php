@@ -4,16 +4,12 @@ $userAccess = require_once __DIR__ . "/database/models/db_users.php";
 $sessionAccess = require_once __DIR__ . "/database/models/db_sessions.php";
 $discussionAccess = require_once __DIR__ . "/database/models/db_discussions.php";
 
-$categoriesList = $discussionAccess->getAllCategories() ?? [];
+$categoriesList = $discussionAccess->getTopCategories() ?? [];
 
 $latests = [
   "discussions" => $discussionAccess->getLastNDiscussions(),
   "messages" => $discussionAccess->getLastNMessages()
 ];
-
-// echo "<pre>";
-// var_dump($latests);
-// echo "</pre>";
 ?>
 
 <!DOCTYPE html>
@@ -80,11 +76,11 @@ $latests = [
                 </a>
               </h3>
               <div>
-                <p>par <a href="./profile.php?id=<?= $discussion["user_id"]; ?>"><?= $discussion["username"]; ?></a></p>
+                <p>par <a href="./profile.php?id=<?= $discussion["user_id"]; ?>" style="color: <?= $discussion["user_color"]; ?>;"><?= $discussion["username"]; ?></a></p>
                 <p>le <?= $discussion["creation_date"]; ?></p>
-                <p><?= $discussion["nb_responses"], $discussion["nb_responses"] > 1 ? " messages" : " message"; ?></p>
               </div>
               <div>
+                <p><?= $discussion["nb_responses"], $discussion["nb_responses"] > 1 ? " messages" : " message"; ?></p>
                 <p>Dernière réponse: <?= $discussion["latest_response"]; ?></p>
               </div>
             </li>
@@ -102,13 +98,13 @@ $latests = [
 
           <?php foreach ($latests["messages"] as $message) : ?>
 
-            <li class="latests-list__item index-list__item">
+            <li class="latests-list__item latests-list__item--messages index-list__item">
               <h3 class="latests-list__item-title">
                 <a href="/discussion.php?id=<?= $message["discussion_id"]; ?>&page=1&limit=10"><?= $message["discussion_title"]; ?></a>
               </h3>
               <div class="">
-                <p><?= $message["text"]; ?></p>
-                <p>par <a href="./profile.php?id=<?= $discussion["user_id"]; ?>"><?= $message["username"]; ?></a></p>
+                <p class="message__text"><?= $message["text"]; ?></p>
+                <p>par <a href="./profile.php?id=<?= $discussion["user_id"]; ?>" style="color: <?= $message["user_color"]; ?>;"><?= $message["username"]; ?></a></p>
                 <p>le <?= $message["creation_date"]; ?></p>
               </div>
             </li>

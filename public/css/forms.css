@@ -43,6 +43,14 @@ input[type="password"] {
   margin-left: auto;
 }
 
+.form-link a {
+  transition: opacity 0.2s ease-out;
+}
+
+.form-link a:hover {
+  opacity: 0.75;
+}
+
 input.input-big {
   font-size: var(--fz-20);
   font-family: var(--ff-title);

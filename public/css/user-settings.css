@@ -1,7 +1,9 @@
 .account-settings-section {
+  position: relative;
   display: grid;
-  grid-template-columns: 1fr 3fr;
+  grid-template-columns: 300px auto;
   padding: 0;
+  min-height: 688px;
 }
 
 .account-settings__aside {
@@ -56,6 +58,23 @@
   padding-left: 32px;
 }
 
+.mobile-settings-menu-toggler {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: none;
+  font-size: var(--fz-20);
+  color: var(--light-grey);
+  padding: 4px;
+  background: none;
+  border: none;
+  transition: opacity 0.2s ease-out;
+}
+
+.mobile-settings-menu-toggler:hover {
+  opacity: 0.75;
+}
+
 .account-settings-article {
   display: none;
 }
@@ -79,7 +98,7 @@
     .textarea-container,
     .password-input-box
   ) {
-  width: 45%;
+  width: 380px;
 }
 
 textarea {
@@ -133,4 +152,50 @@ input[type="color"]::-moz-color-swatch {
 
 .delete-account-container--active {
   display: block;
+}
+
+@media screen and (max-width: 850px) {
+  .account-settings-section {
+    grid-template-columns: auto auto;
+  }
+
+  .account-settings__aside .section-title {
+    font-size: var(--fz-18);
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .account-settings__aside {
+    position: absolute;
+    border-radius: 4px;
+    z-index: 2;
+    display: none;
+    top: 16px;
+    left: 16px;
+    right: 40px;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.6);
+  }
+
+  .account-settings__aside--active {
+    display: block;
+  }
+
+  .account-settings-section__container {
+    padding-left: 16px;
+  }
+
+  .mobile-settings-menu-toggler {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .account-settings-article
+    :is(
+      input:is([type="text"], [type="password"]:not(#password), [type="email"]),
+      .textarea-container,
+      .password-input-box
+    ) {
+    width: 100%;
+  }
 }

@@ -203,8 +203,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
       <!-- navigation des paramètres -->
       <aside class="account-settings__aside">
-        <h2 class="section-title">Paramètres utilisateur</h2>
-        <nav class="account-settings__navigation">
+        <nav class="account-settings__navigation" id="settings-navigation">
+          <h2 class="section-title">Paramètres utilisateur</h2>
           <button class="aside-navigation-link aside-navigation-link--active" type="button" aria-controls="profile-settings" aria-expanded="true">Profil</button>
           <button class="aside-navigation-link" type="button" aria-controls="account-settings" aria-expanded="false">Compte</button>
         </nav>
@@ -225,7 +225,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         <!-- <h1 class="main-title">Modifier mes données</h1> -->
         <!-- Paramètres du profil -->
+        <button class="mobile-settings-menu-toggler" aria-label="Ouvrir le menu de catégorie des paramètres" aria-controls="settings-navigation" aria-expanded="false">
+          <i class="fa-solid fa-ellipsis-vertical mobile-navigation__icon" aria-hidden="true"></i>
+        </button>
         <article class="account-settings-article account-settings-article--profile account-settings-article--active" id="profile-settings" aria-hidden="false">
+
 
           <h2 class="section-title">Profil</h2>
 
