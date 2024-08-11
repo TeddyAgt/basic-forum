@@ -80,7 +80,7 @@ $latests = [
                 </a>
               </h3>
               <div>
-                <p>par <a href="#"><?= $discussion["username"]; ?></a></p>
+                <p>par <a href="./profile.php?id=<?= $discussion["user_id"]; ?>"><?= $discussion["username"]; ?></a></p>
                 <p>le <?= $discussion["creation_date"]; ?></p>
                 <p><?= $discussion["nb_responses"], $discussion["nb_responses"] > 1 ? " messages" : " message"; ?></p>
               </div>
@@ -108,7 +108,7 @@ $latests = [
               </h3>
               <div class="">
                 <p><?= $message["text"]; ?></p>
-                <p>par <a href="#"><?= $message["username"]; ?></a></p>
+                <p>par <a href="./profile.php?id=<?= $discussion["user_id"]; ?>"><?= $message["username"]; ?></a></p>
                 <p>le <?= $message["creation_date"]; ?></p>
               </div>
             </li>

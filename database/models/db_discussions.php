@@ -82,7 +82,8 @@ class DiscussionAccess
           ORDER BY creation_date DESC
           LIMIT 1
         ) AS latest_response,
-        users.username
+        users.username,
+        users.id AS user_id
         FROM discussions
         INNER JOIN categories ON discussions.category_id = categories.id
         INNER JOIN users ON discussions.author_id = users.id
@@ -207,7 +208,8 @@ class DiscussionAccess
           FROM messages AS m2
           WHERE m1.discussion_id = m2.discussion_id
         ) AS nb_responses,
-        users.username
+        users.username,
+        users.id AS user_id
         FROM messages AS m1
         INNER JOIN discussions ON m1.discussion_id = discussions.id
         INNER JOIN categories ON discussions.category_id = categories.id

@@ -230,7 +230,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           <h2 class="section-title">Profil</h2>
 
           <!-- Modifier username -->
-          <form action="./user-settings.php?id=<?= $user->id; ?>&method=1" method="POST" class="account-settings-form" id="change-username-form">
+          <form action="./user-settings.php?id=<?= $user->id; ?>&method=1&sec=0" method="POST" class="account-settings-form" id="change-username-form">
             <div class="input-group">
               <label for="username">Nom d'utilisateur</label>
               <div class="input-flex-container">
@@ -246,7 +246,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           </form>
 
           <!-- Modifier avatar -->
-          <form action="./user-settings.php?id=<?= $user->id; ?>&method=2" method="POST" enctype="multipart/form-data" class="account-settings-form" id="change-username-form">
+          <form action="./user-settings.php?id=<?= $user->id; ?>&method=2&sec=0" method="POST" enctype="multipart/form-data" class="account-settings-form" id="change-username-form">
             <div class="input-group">
               <label for="avatar">Modifier l'avatar</label>
               <div class="input-flex-container input-flex-container--up">
@@ -262,7 +262,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           </form>
 
           <!-- Modifier la couleur de la bannière -->
-          <form action="./user-settings.php?id=<?= $user->id; ?>&method=3" method="POST" enctype="multipart/form-data" class="account-settings-form" id="change-username-form">
+          <form action="./user-settings.php?id=<?= $user->id; ?>&method=3&sec=0" method="POST" enctype="multipart/form-data" class="account-settings-form" id="change-username-form">
             <div class="input-group">
               <label for="banner-color">Couleur de la bannière</label>
               <div class="input-flex-container">
@@ -278,7 +278,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           </form>
 
           <!-- Modifier la couleur des mentions -->
-          <form action="./user-settings.php?id=<?= $user->id; ?>&method=4" method="POST" enctype="multipart/form-data" class="account-settings-form" id="change-username-form">
+          <form action="./user-settings.php?id=<?= $user->id; ?>&method=4&sec=0" method="POST" enctype="multipart/form-data" class="account-settings-form" id="change-username-form">
             <div class="input-group">
               <label for="mentions-color">Couleur de ton nom dans les mentions</label>
               <div class="input-flex-container">
@@ -294,7 +294,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           </form>
 
           <!-- Modifier à propos -->
-          <form action="./user-settings.php?id=<?= $user->id; ?>&method=5" method="POST" enctype="multipart/form-data" class="account-settings-form" id="change-username-form">
+          <form action="./user-settings.php?id=<?= $user->id; ?>&method=5&sec=0" method="POST" enctype="multipart/form-data" class="account-settings-form" id="change-username-form">
             <div class="input-group">
               <label for="about">À propos de moi</label>
               <div class="textarea-container">
@@ -318,7 +318,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           <h2 class="section-title">Compte</h2>
 
           <!-- Modifier email -->
-          <form action="./user-settings.php?id=<?= $user->id; ?>&method=6" method="POST" class="account-settings-form" id="change-email-form">
+          <form action="./user-settings.php?id=<?= $user->id; ?>&method=6&sec=1" method="POST" class="account-settings-form" id="change-email-form">
             <div class="input-group">
               <label for="email">Email</label>
               <div class="input-flex-container">
@@ -334,7 +334,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           </form>
 
           <!-- Modifier password -->
-          <form action="./user-settings.php?id=<?= $user->id; ?>&method=7" method="POST" class="account-settings-form" id="change-password-form">
+          <form action="./user-settings.php?id=<?= $user->id; ?>&method=7&sec=1" method="POST" class="account-settings-form" id="change-password-form">
             <div class="input-group">
               <label for="password">Mot de passe</label>
               <div class="password-input-box">
@@ -380,7 +380,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           <h2 class="section-title">Supprimer mon compte</h2>
 
           <!-- On va gérer la soumission de ce form en JS -->
-          <form action="./user-settings.php?id=<?= $user->id; ?>&method=8" method="POST" class="account-settings-form" id="change-password-form">
+          <form action="./user-settings.php?id=<?= $user->id; ?>&method=8&sec=3" method="POST" class="account-settings-form" id="change-password-form">
 
             <button type="button" class="btn btn--danger" id="delete-account-btn">Supprimer mon compte</button>
 

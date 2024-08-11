@@ -51,7 +51,7 @@ if ($profileUserId && $user->id !== $profileUserId) {
             <img class="profile-picture__img" src="<?= $userProfile["avatar"]; ?>" alt="">
           </div>
         <?php else: ?>
-          <a href="./user-settings.php?id=<?= $userProfile["id"]; ?>" class="header__profile-picture">
+          <a href="./user-settings.php?id=<?= $userProfile["id"]; ?>&sec=0" class="header__profile-picture">
             <i class="profile-picture__overlay fa-solid fa-gear" aria-hidden="true"></i>
             <img class="profile-picture__img" src="<?= $userProfile["avatar"]; ?>" alt="">
           </a>

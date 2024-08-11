@@ -12,6 +12,8 @@ const deleteAccountContainer = document.querySelector(
 );
 
 // Constantes et variables globales
+let sec = new URLSearchParams(window.location.search).get("sec");
+displayUI(navLinks[sec], settingsContainers[sec]);
 
 // Écouteurs d'événements
 navLinks.forEach((link) => link.addEventListener("click", handleClickLink));
@@ -22,6 +24,22 @@ deleteAccountBtn.addEventListener("click", handleClickDeleteBtn);
 function handleClickLink(e) {
   const targetLink = e.target;
   const targetContainer = settingsContainers[navLinks.indexOf(targetLink)];
+  navLinks.forEach((link) => {
+    link.classList.remove("aside-navigation-link--active");
+    link.ariaExpanded = "false";
+  });
+  targetLink.classList.add("aside-navigation-link--active");
+  targetLink.ariaExpanded = "true";
+
+  settingsContainers.forEach((container) => {
+    container.classList.remove("account-settings-article--active");
+    container.ariaHidden = "true";
+  });
+  targetContainer.classList.add("account-settings-article--active");
+  targetContainer.ariaHidden = "false";
+}
+
+function displayUI(targetLink, targetContainer) {
   navLinks.forEach((link) => {
     link.classList.remove("aside-navigation-link--active");
     link.ariaExpanded = "false";
