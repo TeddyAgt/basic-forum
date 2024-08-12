@@ -1,5 +1,9 @@
-.black-card {
+.black-card:first-of-type {
   padding: 0;
+}
+
+.center {
+  flex-direction: column;
 }
 
 .profile-section__header {
@@ -15,6 +19,14 @@
   position: absolute;
   top: 16px;
   right: 16px;
+}
+
+.header__action-group {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  display: flex;
+  gap: 8px;
 }
 
 .main-title {
@@ -62,6 +74,20 @@
 .profile-picture__overlay:hover {
   opacity: 1;
   transition: opacity 0.2s ease-out;
+}
+
+.profile-section__sidebar {
+  padding-right: 16px;
+}
+
+.sidebar__article {
+  border-bottom: 1px solid var(--black-dark);
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+}
+
+.sidebar__btn {
+  margin-bottom: 8px;
 }
 
 .profile-section__content {

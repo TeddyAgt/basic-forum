@@ -7,6 +7,7 @@ class DiscussionAccess
 {
 
   // Categories PDO Statements
+  private PDOStatement $statementCreateCategory;
   private PDOStatement $statementGetAllCategories;
   private PDOStatement $statementGetCategoryById;
   private PDOStatement $statementGetTopCategories;
@@ -33,6 +34,11 @@ class DiscussionAccess
   public function __construct(private PDO $pdo)
   {
     // Categories Statements Preparation
+    $this->statementCreateCategory = $pdo->prepare("
+      INSERT INTO categories (name, icon)
+      VALUES (:name, :icon);
+    ");
+
     $this->statementGetAllCategories = $pdo->prepare("
       SELECT *
       FROM categories
@@ -287,6 +293,13 @@ class DiscussionAccess
   }
 
   // Categories CRUD Methods
+  public function createCategory(string $name, string $icon): void
+  {
+    $this->statementCreateCategory->bindValue(":name", $name);
+    $this->statementCreateCategory->bindValue(":icon", $icon);
+    $this->statementCreateCategory->execute();
+  }
+
   public function getAllCategories(): array
   {
     $this->statementGetAllCategories->execute();

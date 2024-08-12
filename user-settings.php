@@ -386,7 +386,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           <!-- On va gérer la soumission de ce form en JS -->
           <form action="./user-settings.php?id=<?= $user->id; ?>&method=8&sec=3" method="POST" class="account-settings-form" id="change-password-form">
 
-            <button type="button" class="btn btn--danger" id="delete-account-btn">Supprimer mon compte</button>
+            <button type="button" class="btn btn--warning" id="delete-account-btn">Supprimer mon compte</button>
 
             <div class="delete-account-container">
 
@@ -410,8 +410,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <p class="form-error"><?= $errors["confirm-delete-account"]; ?></p>
               <?php endif; ?>
 
-              <button type="submit" aria-label="Sauvegarder les modifications" title="Sauvegarder les modifications" class="btn btn--primary">
-                <i class="fa-regular fa-floppy-disk" aria-hidden="true"></i>
+              <button type="submit" aria-label="Sauvegarder les modifications" title="Sauvegarder les modifications" class="btn btn--warning" id="submit-deletion">
+                Je confirme vouloir supprimer définitivement mon compte
               </button>
 
             </div>

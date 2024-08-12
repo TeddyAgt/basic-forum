@@ -27,7 +27,12 @@ if ($profileUserId && $user->id !== $profileUserId) {
 <head> <!-- ᓚᘏᗢ -->
   <?php require_once "./includes/head.php"; ?>
   <link rel="stylesheet" href="./public/css/profile.css">
-  <title><?= $userProfile["username"]; ?> - Forum</title>
+  <?php if ($user->role === "administrator" || $user->role === "moderator") {
+    echo '<link rel="stylesheet" href="./public/css/admin.css">';
+    echo '<link rel="stylesheet" href="./public/css/forms.css">';
+  }
+  ?>
+  <title><?= $userProfile["username"]; ?> - Discuz</title>
 </head>
 
 <body>
@@ -50,27 +55,34 @@ if ($profileUserId && $user->id !== $profileUserId) {
           <div class="header__profile-picture">
             <img class="profile-picture__img" src="<?= $userProfile["avatar"]; ?>" alt="">
           </div>
+
         <?php else: ?>
-          <a href="./user-settings.php?id=<?= $userProfile["id"]; ?>&sec=0" class="header__profile-picture">
+          <a href="./user-settings.php?id=<?= $userProfile["id"]; ?>&sec=0" class="header__profile-picture" title="Modifier mes paramètres" aria-label="Modifier mes paramètres">
             <i class="profile-picture__overlay fa-solid fa-gear" aria-hidden="true"></i>
             <img class="profile-picture__img" src="<?= $userProfile["avatar"]; ?>" alt="">
           </a>
+          <div class="header__action-group">
+            <button class="btn btn--white btn--little show-follow-ups__btn" data-role="following">Suivis</button>
+            <button class="btn btn--white btn--little show-follow-ups__btn" data-role="followedby">Abonnés</button>
+          </div>
         <?php endif; ?>
       </header>
 
-      <button class="show-follow-ups__btn" data-role="following">Suivis</button>
-      <button class="show-follow-ups__btn" data-role="followedby">Abonnés</button>
-
       <div class="profile-section__content">
-        <aside class="profile-section__sidebar">
-          <article class="sidebar__user-data">
 
-            <!-- User infos -->
+        <aside class="profile-section__sidebar">
+          <!-- User infos -->
+          <article class="sidebar__user-data sidebar__article">
             <h2 class="section-title">Informations</h2>
           </article>
 
+          <article class="sidebar__action-group sidebar__article">
+            <a href="#" class="btn btn--black sidebar__btn">Voir toutes les discussions</a>
+            <a href="#" class="btn btn--black sidebar__btn"><?= $visitor ? "Envoyer un message privé" : "Messagerie"; ?></a>
+          </article>
+
           <!-- User stats -->
-          <article class="sidebar__stats">
+          <article class="sidebar__stats sidebar__article">
             <h2 class="section-title">Statistiques</h2>
 
             <ul class="stats-list">
@@ -80,8 +92,8 @@ if ($profileUserId && $user->id !== $profileUserId) {
               <li class="stats-list__item">Abonnements: <span><?= $userProfile["nbr_of_follow_ups"]; ?></span></li>
               <li class="stats-list__item">Abonnés: <span><?= $userProfile["nbr_of_followers"]; ?></span></li>
             </ul>
-
           </article>
+
         </aside>
 
         <!-- User activities -->
@@ -118,6 +130,12 @@ if ($profileUserId && $user->id !== $profileUserId) {
 
     </section>
 
+    <?php if ($user->role === "administrator" || $user->role === "moderator") {
+      require "./views/admin-section.php";
+      echo "<script src='./public/js/admin.js'></script>";
+    }
+    ?>
+
   </main>
 
   <div class="follow-ups__overlay">
@@ -125,7 +143,7 @@ if ($profileUserId && $user->id !== $profileUserId) {
     <article class="follow-ups__article black-card" role="dialog">
 
       <div class="follow-ups__top-bar">
-        <h2>Amis</h2>
+        <h2>Abonnements</h2>
         <button class="close-popup-btn" aria-label="Fermer la fenêtres des personne suivies">
           <i class="fa-solid fa-xmark" aria-hidden="true"></i>
         </button>
@@ -149,7 +167,6 @@ if ($profileUserId && $user->id !== $profileUserId) {
       </div>
 
     </article>
-
 
   </div>
 

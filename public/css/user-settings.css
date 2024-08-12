@@ -101,6 +101,10 @@
   width: 380px;
 }
 
+.account-settings-form:not(:last-child) {
+  margin-bottom: 24px;
+}
+
 textarea {
   height: 220px;
   resize: none;
@@ -142,8 +146,43 @@ input[type="color"]::-moz-color-swatch {
   font-size: var(--fz-14);
 }
 
+#delete-account-btn {
+  margin-bottom: 24px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
 #confirm-delete-account {
-  margin-right: 8px;
+  position: relative;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  border-radius: 4px;
+  height: 12px;
+  width: 12px;
+  background: #fff;
+  cursor: pointer;
+}
+
+#confirm-delete-account:checked::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 4px;
+  background: var(--error);
+}
+
+#submit-deletion {
+  margin-top: 16px;
 }
 
 .delete-account-container {
