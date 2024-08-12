@@ -28,8 +28,8 @@ if ($profileUserId && $user->id !== $profileUserId) {
   <?php require_once "./includes/head.php"; ?>
   <link rel="stylesheet" href="./public/css/profile.css">
   <?php if ($user->role === "administrator" || $user->role === "moderator") {
-    echo '<link rel="stylesheet" href="./public/css/admin.css">';
     echo '<link rel="stylesheet" href="./public/css/forms.css">';
+    echo '<link rel="stylesheet" href="./public/css/admin.css">';
   }
   ?>
   <title><?= $userProfile["username"]; ?> - Discuz</title>
@@ -131,7 +131,7 @@ if ($profileUserId && $user->id !== $profileUserId) {
     </section>
 
     <?php if ($user->role === "administrator" || $user->role === "moderator") {
-      require "./views/admin-section.php";
+      require "./views/profile/admin-section.php";
       echo "<script src='./public/js/admin.js'></script>";
     }
     ?>

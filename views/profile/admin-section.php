@@ -1,3 +1,10 @@
+<?php
+
+/**
+ * @var User $user
+ */
+?>
+
 <section class="admin-section black-card section-1200">
   <h2 class="main-title">Administration</h2>
 

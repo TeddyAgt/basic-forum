@@ -1,0 +1,8 @@
+.admin-section
+  :is(
+    input:is([type="text"], [type="password"]:not(#password), [type="email"]),
+    .textarea-container,
+    .password-input-box
+  ) {
+  width: 380px;
+}
