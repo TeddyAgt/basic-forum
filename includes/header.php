@@ -8,7 +8,7 @@ $user = $sessionAccess->isLoggedIn();
   </a>
 
   <div class="header-search" role="search">
-    <form action="" method="GET" class="header-search__form">
+    <form action="./search.php" method="GET" class="header-search__form">
       <input type="text" name="search" id="main-search-input" placeholder="Rechercher sur le forum">
       <button type="submit" title="Rechercher..." aria-label="Rechercher">
         <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>

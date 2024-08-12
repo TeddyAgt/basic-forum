@@ -2,7 +2,7 @@
 latestsLists = document.querySelectorAll(".latests-list");
 const seeLatestsBtns = document.querySelectorAll(".see-latests-btn");
 const seeLatestsArticles = document.querySelectorAll(".latests-article");
-const followBtn = document.querySelector(".btn--follow") ?? "";
+const followBtn = document.querySelector("#header-follow-btn") ?? "";
 
 // Constantes globales
 const userId = new URLSearchParams(window.location.search).get("id") ?? "";
@@ -105,8 +105,122 @@ async function handleClickFollowBtn(e) {
       e.target.textContent = "Suivre";
       e.target.dataset.following = "false";
     } else {
-      e.target.textContent = "Suivi";
+      e.target.textContent = "Suivi(e)";
       e.target.dataset.following = "true";
     }
   }
+}
+
+// Récupération des follow ups **************************************************
+const followUpsOverlay = document.querySelector(".follow-ups__overlay");
+const followUpsPopup = document.querySelector(".follow-ups__article");
+const showFollowUpsBtns = [
+  ...document.querySelectorAll(".show-follow-ups__btn"),
+];
+const toggleFollowUpsBtns = [
+  ...document.querySelectorAll(".follow-ups__nav__btn"),
+];
+const followUpsLists = [...document.querySelectorAll(".follow-ups__list")];
+const closePopupBtn = document.querySelector(".close-popup-btn");
+
+let followingList = [];
+let followedbyList = [];
+
+showFollowUpsBtns.forEach((btn) =>
+  btn.addEventListener("click", displayFollowUpList)
+);
+toggleFollowUpsBtns.forEach((btn) =>
+  btn.addEventListener("click", displayFollowUpList)
+);
+followUpsPopup.addEventListener("click", (e) => e.stopPropagation());
+
+async function displayFollowUpList(e) {
+  const action = e.target.dataset.role;
+  toggleyOverlay(true);
+
+  if (action === "following") {
+    followUpsLists[0].innerHTML = "";
+    followUpsLists[0].classList.add("follow-ups__list--active");
+    followUpsLists[1].classList.remove("follow-ups__list--active");
+    toggleFollowUpsBtns[0].classList.add("follow-ups__nav__btn--active");
+    toggleFollowUpsBtns[1].classList.remove("follow-ups__nav__btn--active");
+    followingList = await getFollowUps("follower", userId);
+    const listItems = createListItems(action, followingList);
+    followUpsLists[0].append(...listItems);
+  } else {
+    followUpsLists[1].innerHTML = "";
+    followUpsLists[1].classList.add("follow-ups__list--active");
+    followUpsLists[0].classList.remove("follow-ups__list--active");
+    toggleFollowUpsBtns[1].classList.add("follow-ups__nav__btn--active");
+    toggleFollowUpsBtns[0].classList.remove("follow-ups__nav__btn--active");
+    followedbyList = await getFollowUps("followee", userId);
+    const listItems = createListItems(action, followedbyList);
+    followUpsLists[1].append(...listItems);
+  }
+}
+
+async function getFollowUps(action, userId) {
+  try {
+    const response = await fetch(
+      `./actions/get-follow-ups.php?action=${action}&id=${userId}`
+    );
+
+    if (response.ok) {
+      return (data = await response.json());
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function toggleyOverlay(show) {
+  if (show) {
+    followUpsOverlay.classList.add("follow-ups__overlay--active");
+    followUpsOverlay.addEventListener("click", () => toggleyOverlay(false));
+    closePopupBtn.addEventListener("click", () => toggleyOverlay(false));
+  } else {
+    followUpsOverlay.classList.remove("follow-ups__overlay--active");
+    followUpsOverlay.removeEventListener("click", () => toggleyOverlay(false));
+    closePopupBtn.removeEventListener("click", () => toggleyOverlay(false));
+  }
+}
+
+function createListItems(action, list) {
+  if (action === "following") {
+    list = list.map((user) => {
+      const li = document.createElement("li");
+      li.classList.add("follow_ups__list-item");
+      li.innerHTML = `
+        <a href="./profile.php?id=${user.id}" class="item__link">
+          <div class="item__profile-picture">
+            <img src="${user.avatar}" alt="">
+          </div>
+          <span>${user.username}</span>
+        </a>
+        `;
+      const btn = document.createElement("button");
+      btn.classList.add("btn", "btn--follow", "btn--follow-true");
+      btn.dataset.following = "true";
+      btn.dataset.followeeId = user.id;
+      btn.textContent = "Suivi(e)";
+      btn.addEventListener("click", handleClickFollowBtn);
+      li.appendChild(btn);
+      return li;
+    });
+  } else {
+    list = list.map((user) => {
+      const li = document.createElement("li");
+      li.classList.add("follow_ups__list-item");
+      li.innerHTML = `
+        <a href="./profile.php?id=${user.id}" class="item__link">
+          <div class="item__profile-picture">
+            <img src="${user.avatar}" alt="">
+          </div>
+          <span>${user.username}</span>
+        </a>
+      `;
+      return li;
+    });
+  }
+  return list;
 }

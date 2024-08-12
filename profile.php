@@ -39,9 +39,9 @@ if ($profileUserId && $user->id !== $profileUserId) {
       <header class="profile-section__header" style="background-color: <?= $userProfile["banner_color"]; ?>;">
         <?php if ($visitor): ?>
           <?php if ($isFollowing): ?>
-            <button class="btn btn--follow btn--follow-true" data-following="true" data-followee-id="<?= $userProfile["id"] ?>">Suivi</button>
+            <button class="btn btn--follow btn--follow-true" id="header-follow-btn" data-following="true" data-followee-id="<?= $userProfile["id"] ?>">Suivi(e)</button>
           <?php else: ?>
-            <button class="btn btn--follow btn--follow-false" data-following="false" data-followee-id="<?= $userProfile["id"] ?>">Suivre</button>
+            <button class="btn btn--follow btn--follow-false" id="header-follow-btn" data-following="false" data-followee-id="<?= $userProfile["id"] ?>">Suivre</button>
           <?php endif; ?>
         <?php endif; ?>
         <h1 class="main-title"><?= $userProfile["username"]; ?></h1>
@@ -57,6 +57,9 @@ if ($profileUserId && $user->id !== $profileUserId) {
           </a>
         <?php endif; ?>
       </header>
+
+      <button class="show-follow-ups__btn" data-role="following">Suivis</button>
+      <button class="show-follow-ups__btn" data-role="followedby">Abonnés</button>
 
       <div class="profile-section__content">
         <aside class="profile-section__sidebar">
@@ -113,12 +116,42 @@ if ($profileUserId && $user->id !== $profileUserId) {
         </article>
       </div>
 
-
-
-
     </section>
 
   </main>
+
+  <div class="follow-ups__overlay">
+
+    <article class="follow-ups__article black-card" role="dialog">
+
+      <div class="follow-ups__top-bar">
+        <h2>Amis</h2>
+        <button class="close-popup-btn" aria-label="Fermer la fenêtres des personne suivies">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <nav class="follow-ups__nav">
+        <button class="follow-ups__nav__btn follow-ups__nav__btn--active" data-role="following">Suivis</button>
+        <button class="follow-ups__nav__btn" data-role="followedby">Abonnés</button>
+      </nav>
+
+      <div class="follow-ups__lists-container">
+        <!-- Liste des abonnements -->
+        <ul class="follow-ups__list follow-ups__list--active" data-role="following">
+          <!-- JS -->
+        </ul>
+
+        <!-- Liste des abonnés -->
+        <ul class="follow-ups__list" data-role="followedby">
+          <!-- JS -->
+        </ul>
+      </div>
+
+    </article>
+
+
+  </div>
 
   <?php require_once "./includes/footer.php"; ?>
   <script src="./public/js/app.js"></script>

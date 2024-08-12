@@ -7,6 +7,8 @@ class FollowUpAccess
   private PDOStatement $statementIsFollowing;
   private PDOStatement $statementCreateOne;
   private PDOStatement $statementDeleteOne;
+  private PDOStatement $statementGetFollowUpsByFollower;
+  private PDOStatement $statementGetFollowUpsByFollowee;
 
   public function __construct(private PDO $pdo)
   {
@@ -24,6 +26,20 @@ class FollowUpAccess
     $this->statementDeleteOne = $pdo->prepare("
       DELETE FROM follow_ups
       WHERE follower = :followerId AND followee =  :followeeId;
+    ");
+
+    $this->statementGetFollowUpsByFollower = $pdo->prepare("
+      SELECT users.id, users.username, users.avatar
+      FROM follow_ups
+      JOIN users ON users.id = follow_ups.followee
+      WHERE follower = :userId;
+    ");
+
+    $this->statementGetFollowUpsByFollowee = $pdo->prepare("
+      SELECT users.id, users.username, users.avatar
+      FROM follow_ups
+      JOIN users ON users.id = follow_ups.follower
+      WHERE followee = :userId;
     ");
   }
 
@@ -50,6 +66,20 @@ class FollowUpAccess
     $this->statementDeleteOne->bindValue(":followerId", $followerId);
     $this->statementDeleteOne->bindValue(":followeeId", $followeeId);
     $this->statementDeleteOne->execute();
+  }
+
+  public function getFollowUpsByFollower(int $userId): array
+  {
+    $this->statementGetFollowUpsByFollower->bindValue(":userId", $userId);
+    $this->statementGetFollowUpsByFollower->execute();
+    return $this->statementGetFollowUpsByFollower->fetchAll();
+  }
+
+  public function getFollowUpsByFollowee(int $userId): array
+  {
+    $this->statementGetFollowUpsByFollowee->bindValue(":userId", $userId);
+    $this->statementGetFollowUpsByFollowee->execute();
+    return $this->statementGetFollowUpsByFollowee->fetchAll();
   }
 }
 
