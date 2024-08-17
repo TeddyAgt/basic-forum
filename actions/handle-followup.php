@@ -13,11 +13,11 @@ $discussionAccess = require_once __DIR__ . "/../database/models/db_discussions.p
 $user = $sessionAccess->isLoggedIn();
 $data = json_decode(file_get_contents("php://input"), true);
 
-// Ajouter le sanitize de data ici
+$followee = (int) filter_var($data["followeeId"], FILTER_SANITIZE_NUMBER_INT) ?? "";
 
 if ($data["isFollowing"] === "true") {
-  $followUpsAccess->unfollowUser($user->id, $data["followeeId"]);
+  $followUpsAccess->unfollowUser($user->id, $followee);
 } else {
-  $followUpsAccess->followUser($user->id, $data["followeeId"]);
+  $followUpsAccess->followUser($user->id, $followee);
 }
 var_dump($data);

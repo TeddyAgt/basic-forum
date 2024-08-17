@@ -28,4 +28,5 @@
     </article>
   <?php endif; ?>
 
+  <div class="toast-container"></div>
 </section>

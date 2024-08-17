@@ -1,9 +1,17 @@
 // Global **************************************************
 const ERROR_REQUIRED = "Ce champs est requis";
 const ERROR_TITLE_TOO_SHORT = "Le titre doit faire 3 caractères minimum";
+const toastContainer = document.querySelector(".toast-container");
 
-function showSuccessMessage(message) {
-  // do smthg
+function showResponseToast(message, background) {
+  const toast = document.createElement("p");
+  toast.classList.add("toast", `toast--${background}`);
+  toast.textContent = message;
+  toastContainer.appendChild(toast);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 2500);
 }
 
 // Ajout d'une catégorie **************************************************
@@ -37,6 +45,7 @@ function handleSubmitAddCategoryForm(e) {
 
   if (isValid) {
     createNewCategory(categoryName, categoryIcon);
+    addCategoryForm.reset();
   }
 }
 
@@ -54,7 +63,7 @@ async function createNewCategory(categoryName, categoryIcon) {
     });
 
     if (response.ok) {
-      showSuccessMessage("Catégorie créée avec succès");
+      showResponseToast("Catégorie créée avec succès", "green");
     }
   } catch (e) {
     console.log(e);
